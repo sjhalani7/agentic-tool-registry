@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://openrouter-for-actions.github.io/schemas/toolcard.schema.json",
+  "title": "ToolCard",
+  "description": "Compact discovery manifest for a tool/API; keep serialized size under 2048 bytes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "publisher",
+    "capabilities",
+    "description",
+    "pricing",
+    "currency",
+    "payment"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Slug identifier in the form publisher/tool (lowercase, hyphenated).",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name surfaced to agents when shortlisting the tool.",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "url", "verified"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Publisher name or organization."
+        },
+        "url": {
+          "type": "string",
+          "description": "Canonical publisher URL.",
+          "format": "uri"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "True if the registry has verified publisher ownership."
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "List of short capability tags (verbs/nouns).",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]{1,32}$"
+      },
+      "minItems": 1,
+      "maxItems": 12,
+      "uniqueItems": true
+    },
+    "description": {
+      "type": "string",
+      "description": "≤256 character summary agents read during shortlist.",
+      "maxLength": 256
+    },
+    "pricing": {
+      "type": "string",
+      "description": "Short text or URL describing pricing details.",
+      "maxLength": 256
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 or crypto ticker for the primary price reference.",
+      "pattern": "^[A-Z0-9]{3,5}$"
+    },
+    "payment": {
+      "type": "object",
+      "description": "Payment requirement flags surfaced on the ToolCard.",
+      "additionalProperties": false,
+      "required": ["is_paid"],
+      "properties": {
+        "is_paid": {
+          "type": "boolean",
+          "description": "True if the agent must pay before invoking the tool."
+        },
+        "purl_supported": {
+          "type": "boolean",
+          "description": "Whether the tool can be used with Stripe purl for payment flows."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "is_paid": { "const": true }
+            }
+          },
+          "then": {
+            "properties": {
+              "purl_supported": { "type": "boolean" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

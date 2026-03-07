@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://openrouter-for-actions.github.io/schemas/tool-verification.schema.json",
+  "title": "ToolVerification",
+  "description": "Manual moderator verification record for a specific tool.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tool_id",
+    "status",
+    "reviewed_by",
+    "reviewed_at",
+    "evidence"
+  ],
+  "properties": {
+    "tool_id": {
+      "type": "string",
+      "description": "Slug identifier matching toolcard.id and toolspec.tool_id.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "status": {
+      "type": "string",
+      "description": "Verification status for merged registry state.",
+      "enum": ["verified", "revoked"]
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Moderator handle or reviewer identifier.",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "reviewed_at": {
+      "type": "string",
+      "description": "ISO8601 UTC timestamp for the moderation decision.",
+      "format": "date-time"
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "official_docs_url",
+        "external_references",
+        "notes"
+      ],
+      "properties": {
+        "official_docs_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 512
+        },
+        "official_repo_url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 512
+        },
+        "external_references": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 512
+          }
+        },
+        "notes": {
+          "type": "string",
+          "description": "Short explanation of the legitimacy review outcome.",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    }
+  }
+}

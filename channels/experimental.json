@@ -1,0 +1,6 @@
+{
+  "channel": "experimental",
+  "version": "2026-03-04",
+  "description": "Early-stage tools that may be unstable or change rapidly.",
+  "tools": []
+}

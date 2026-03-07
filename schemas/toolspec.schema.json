@@ -1,0 +1,219 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://openrouter-for-actions.github.io/schemas/toolspec.schema.json",
+  "title": "ToolSpec",
+  "description": "Trimmed manifest describing how to call a tool/API/CLI.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tool_id",
+    "type",
+    "summary",
+    "auth",
+    "external_docs"
+  ],
+  "properties": {
+    "tool_id": {
+      "type": "string",
+      "description": "Slug identifier matching the ToolCard id.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["http", "cli", "mcp"],
+      "description": "Primary interface type for the tool."
+    },
+    "summary": {
+      "type": "string",
+      "description": "One-paragraph overview (≤512 chars).",
+      "maxLength": 512
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instructions"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["none", "api_key", "oauth", "cli_login", "signing_key", "x402"],
+          "description": "Auth mechanism required before calling the tool."
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Concise guidance (≤512 chars) on acquiring/using credentials.",
+          "maxLength": 512
+        },
+        "payment_client": {
+          "type": "string",
+          "enum": ["purl", "custom"],
+          "description": "Optional client used to satisfy payment/auth flow."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "x402" }
+            }
+          },
+          "then": {
+            "required": ["payment_client"]
+          }
+        }
+      ]
+    },
+    "external_docs": {
+      "type": "array",
+      "description": "References to full documentation.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["description", "url"],
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "behavior_pack_ref": {
+      "type": "string",
+      "description": "Optional path or identifier for the Behavior Pack."
+    },
+    "http": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base_url", "endpoints"],
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Root URL for API requests."
+        },
+        "headers": {
+          "type": "array",
+          "description": "Static headers agents should include.",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "value": {"type": "string"}
+            }
+          }
+        },
+        "endpoints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "method", "path", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string", "maxLength": 64},
+              "method": {
+                "type": "string",
+                "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+              },
+              "path": {"type": "string", "maxLength": 256},
+              "description": {"type": "string", "maxLength": 512},
+              "query_params": {
+                "type": "array",
+                "items": {"type": "string", "maxLength": 64}
+              },
+              "body": {
+                "type": "object",
+                "description": "Simple body schema hints (optional).",
+                "additionalProperties": true
+              },
+              "example": {
+                "type": "object",
+                "description": "Minimal example payload."
+              }
+            }
+          }
+        }
+      }
+    },
+    "cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binary", "commands"],
+      "properties": {
+        "binary": {
+          "type": "string",
+          "description": "Executable name or path."
+        },
+        "install": {
+          "type": "string",
+          "description": "Short installation guidance.",
+          "maxLength": 512
+        },
+        "commands": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "usage", "description"],
+            "properties": {
+              "name": {"type": "string", "maxLength": 64},
+              "usage": {"type": "string", "maxLength": 256},
+              "description": {"type": "string", "maxLength": 512},
+              "example": {"type": "string", "maxLength": 512}
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["server_url", "capabilities"],
+      "properties": {
+        "server_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"type": {"const": "http"}}
+      },
+      "then": {
+        "required": ["http"]
+      }
+    },
+    {
+      "if": {
+        "properties": {"type": {"const": "cli"}}
+      },
+      "then": {
+        "required": ["cli"]
+      }
+    },
+    {
+      "if": {
+        "properties": {"type": {"const": "mcp"}}
+      },
+      "then": {
+        "required": ["mcp"]
+      }
+    }
+  ]
+}

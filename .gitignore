@@ -1,0 +1,42 @@
+.github/context/
+.github/AGENTS.md
+.github/PROJECT_OVERVIEW.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Test/cache/tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+
+# Logs/temp
+*.log
+tmp/
+*.tmp
+
+# Local env/secrets
+.env
+.env.*
+*.local
+
+# Editors
+.vscode/
+.idea/

@@ -1,0 +1,17 @@
+{
+  "version": "2026-03-04",
+  "channels": [
+    {
+      "name": "stable",
+      "path": "channels/stable.json"
+    },
+    {
+      "name": "community",
+      "path": "channels/community.json"
+    },
+    {
+      "name": "experimental",
+      "path": "channels/experimental.json"
+    }
+  ]
+}

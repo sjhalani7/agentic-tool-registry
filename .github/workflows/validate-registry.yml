@@ -1,0 +1,37 @@
+name: Validate Registry
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema
+
+      - name: Validate tool manifests and policy
+        run: python3 scripts/validate_toolcards.py
+
+      - name: Validate links
+        run: python3 scripts/check_links.py --timeout 12
+
+      - name: Validate script syntax
+        run: python3 -m py_compile scripts/*.py
