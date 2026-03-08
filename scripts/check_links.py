@@ -18,22 +18,26 @@ USER_AGENT = "oss-mktpl-link-check/1.0"
 
 
 def iter_tool_dirs() -> list[Path]:
+    """Return sorted tool directories under tools/<publisher>/<tool>."""
     if not TOOLS_ROOT.exists():
         return []
     return sorted(path for path in TOOLS_ROOT.glob("*/*") if path.is_dir())
 
 
 def load_json(path: Path) -> Any:
+    """Load a JSON file from disk."""
     with path.open() as handle:
         return json.load(handle)
 
 
 def add_url(index: dict[str, set[str]], value: Any, source: str) -> None:
+    """Add a URL and source label to the deduplicated URL index."""
     if isinstance(value, str) and value:
         index[value].add(source)
 
 
 def collect_urls() -> dict[str, set[str]]:
+    """Collect all registry URLs from toolcards, toolspecs, and verification records."""
     urls: dict[str, set[str]] = defaultdict(set)
     for tool_dir in iter_tool_dirs():
         card_path = tool_dir / "toolcard.json"
@@ -82,6 +86,7 @@ def collect_urls() -> dict[str, set[str]]:
 
 
 def validate_url_syntax(url: str) -> str | None:
+    """Validate basic URL syntax rules required by this checker."""
     parsed = urlparse(url)
     if parsed.scheme.lower() != "https":
         return "must use https"
@@ -91,12 +96,14 @@ def validate_url_syntax(url: str) -> str | None:
 
 
 def http_status(url: str, method: str, timeout: float) -> int:
+    """Perform an HTTP request and return the response status code."""
     request = Request(url=url, method=method, headers={"User-Agent": USER_AGENT})
     with urlopen(request, timeout=timeout) as response:
         return int(response.getcode())
 
 
 def validate_live(url: str, timeout: float) -> str | None:
+    """Run live reachability checks and return an error string on failure."""
     try:
         status = http_status(url, "HEAD", timeout)
         if 200 <= status < 300:
@@ -120,6 +127,7 @@ def validate_live(url: str, timeout: float) -> str | None:
 
 
 def main() -> int:
+    """Run URL validation and return a process exit code."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--offline", action="store_true", help="Run syntax-only checks.")
     parser.add_argument("--timeout", type=float, default=10.0, help="Per-request timeout in seconds.")

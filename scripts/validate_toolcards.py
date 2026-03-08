@@ -40,11 +40,13 @@ SHORTENER_HOSTS = {
 
 
 def load_schema(path: Path) -> dict:
+    """Load a JSON schema file from disk."""
     with path.open() as fh:
         return json.load(fh)
 
 
 def load_json(path: Path, failures: List[str]) -> Any:
+    """Load a JSON document and append parse failures to the shared list."""
     try:
         return json.loads(path.read_text())
     except Exception as exc:
@@ -53,18 +55,21 @@ def load_json(path: Path, failures: List[str]) -> Any:
 
 
 def iter_tool_dirs() -> List[Path]:
+    """Return sorted tool directories under tools/<publisher>/<tool>."""
     if not TOOLS_ROOT.exists():
         return []
     return sorted(p for p in TOOLS_ROOT.glob("*/*") if p.is_dir())
 
 
 def normalize_host(host: str | None) -> str:
+    """Normalize a hostname for consistent comparisons."""
     if not host:
         return ""
     return host.lower().rstrip(".")
 
 
 def get_registrable_domain(host: str) -> str:
+    """Approximate a registrable domain by taking the last two labels."""
     parts = host.split(".")
     if len(parts) < 2:
         return host
@@ -72,6 +77,7 @@ def get_registrable_domain(host: str) -> str:
 
 
 def is_ip_host(host: str) -> bool:
+    """Return True when the host is a raw IPv4/IPv6 address."""
     try:
         ipaddress.ip_address(host.strip("[]"))
         return True
@@ -80,10 +86,12 @@ def is_ip_host(host: str) -> bool:
 
 
 def is_shortener_host(host: str) -> bool:
+    """Return True when the host matches a known URL shortener."""
     return any(host == entry or host.endswith("." + entry) for entry in SHORTENER_HOSTS)
 
 
 def is_first_party_host(host: str, publisher_host: str) -> bool:
+    """Check whether host belongs to the same first-party domain as publisher_host."""
     if not host or not publisher_host:
         return False
     if host == publisher_host or host.endswith("." + publisher_host):
@@ -92,12 +100,14 @@ def is_first_party_host(host: str, publisher_host: str) -> bool:
 
 
 def parse_host(url: str) -> str:
+    """Extract and normalize the hostname from a URL string."""
     if not isinstance(url, str) or not url:
         return ""
     return normalize_host(urlparse(url).hostname)
 
 
 def is_iso8601_utc(value: Any) -> bool:
+    """Validate that a value is an ISO8601 UTC timestamp ending in Z."""
     if not isinstance(value, str) or not value.endswith("Z"):
         return False
     try:
@@ -108,6 +118,7 @@ def is_iso8601_utc(value: Any) -> bool:
 
 
 def validate_https_url(url: Any, label: str) -> List[str]:
+    """Validate URL scheme, host quality, and shortener/IP restrictions."""
     errors: List[str] = []
     if not isinstance(url, str) or not url:
         return [f"{label} must be a non-empty URL string"]
@@ -130,6 +141,7 @@ def validate_https_url(url: Any, label: str) -> List[str]:
 
 
 def validate_channels(tool_ids: set[str], verified_tool_ids: set[str]) -> List[str]:
+    """Validate channel manifest structure and verified-only tool membership."""
     failures: List[str] = []
     expected_files = {
         "index.json",
@@ -186,6 +198,7 @@ def validate_channels(tool_ids: set[str], verified_tool_ids: set[str]) -> List[s
 
 
 def manual_validate_card(card: dict) -> List[str]:
+    """Perform fallback ToolCard validation when jsonschema is unavailable."""
     errors: List[str] = []
 
     def expect(condition: bool, msg: str) -> None:
@@ -252,6 +265,7 @@ def manual_validate_card(card: dict) -> List[str]:
 
 
 def manual_validate_spec(spec: dict, expected_id: str) -> List[str]:
+    """Perform fallback ToolSpec validation when jsonschema is unavailable."""
     errors: List[str] = []
 
     def expect(condition: bool, msg: str) -> None:
@@ -320,6 +334,7 @@ def manual_validate_spec(spec: dict, expected_id: str) -> List[str]:
 
 
 def manual_validate_verification(verification: dict, expected_id: str, spec_type: str) -> List[str]:
+    """Perform fallback verification record checks without jsonschema."""
     errors: List[str] = []
 
     def expect(condition: bool, msg: str) -> None:
@@ -361,6 +376,7 @@ def manual_validate_verification(verification: dict, expected_id: str, spec_type
 
 
 def validate_tool_policies(card: dict, spec: dict, verification: dict, expected_slug: str) -> List[str]:
+    """Apply cross-file policy checks not enforced by JSON schema alone."""
     errors: List[str] = []
 
     def expect(condition: bool, msg: str) -> None:
@@ -457,6 +473,7 @@ def validate_tool_policies(card: dict, spec: dict, verification: dict, expected_
 
 
 def main() -> int:
+    """Run full registry validation and return an exit code."""
     card_schema = load_schema(TOOLCARD_SCHEMA_PATH)
     spec_schema = load_schema(TOOLSPEC_SCHEMA_PATH)
     verification_schema = load_schema(VERIFICATION_SCHEMA_PATH)
