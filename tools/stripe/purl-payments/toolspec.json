@@ -9,7 +9,7 @@
   "external_docs": [
     {
       "description": "purl docs",
-      "url": "https://www.purl.dev/docs"
+      "url": "https://www.purl.dev"
     },
     {
       "description": "purl GitHub repository",
@@ -18,7 +18,7 @@
   ],
   "cli": {
     "binary": "purl",
-    "install": "Install via the purl docs: https://www.purl.dev/docs",
+    "install": "Install via the purl GitHub: https://github.com/stripe/purl",
     "commands": [
       {
         "name": "wallet add",
