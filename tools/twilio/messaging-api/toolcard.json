@@ -1,0 +1,23 @@
+{
+  "id": "twilio/messaging-api",
+  "name": "Twilio Messaging API",
+  "publisher": {
+    "name": "Twilio",
+    "url": "https://www.twilio.com",
+    "verified": true
+  },
+  "capabilities": [
+    "sms",
+    "mms",
+    "whatsapp",
+    "send-message",
+    "message-status"
+  ],
+  "description": "Twilio Programmable Messaging API for sending outbound SMS/MMS/WhatsApp messages and querying or managing message resources.",
+  "pricing": "Usage-based pricing varies by channel, sender type, and destination; see https://www.twilio.com/en-us/pricing/messaging for current rates and carrier fees.",
+  "currency": "USD",
+  "payment": {
+    "is_paid": true,
+    "purl_supported": false
+  }
+}

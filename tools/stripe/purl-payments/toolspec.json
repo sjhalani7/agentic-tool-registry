@@ -1,0 +1,43 @@
+{
+  "tool_id": "stripe/purl-payments",
+  "type": "cli",
+  "summary": "purl is a CLI for calling APIs, including HTTP 402/x402 pay-per-request APIs, using wallet-backed payment flow.",
+  "auth": {
+    "type": "cli_login",
+    "instructions": "Install purl, configure a wallet with `purl wallet add`, then invoke endpoints directly with the purl command."
+  },
+  "external_docs": [
+    {
+      "description": "purl docs",
+      "url": "https://www.purl.dev/docs"
+    },
+    {
+      "description": "purl GitHub repository",
+      "url": "https://github.com/stripe/purl"
+    }
+  ],
+  "cli": {
+    "binary": "purl",
+    "install": "Install via the purl docs: https://www.purl.dev/docs",
+    "commands": [
+      {
+        "name": "wallet add",
+        "usage": "purl wallet add",
+        "description": "Adds/configures a wallet for paying 402 challenges.",
+        "example": "purl wallet add"
+      },
+      {
+        "name": "request free endpoint",
+        "usage": "purl https://www.purl.dev/test/free",
+        "description": "Calls a free test endpoint through purl.",
+        "example": "purl https://www.purl.dev/test/free"
+      },
+      {
+        "name": "request paid endpoint",
+        "usage": "purl https://www.purl.dev/test/paid",
+        "description": "Demonstrates a paid request flow where purl handles HTTP 402 settlement.",
+        "example": "purl https://www.purl.dev/test/paid"
+      }
+    ]
+  }
+}

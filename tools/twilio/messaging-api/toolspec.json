@@ -1,0 +1,94 @@
+{
+  "tool_id": "twilio/messaging-api",
+  "type": "http",
+  "summary": "Twilio Programmable Messaging REST API for sending SMS/MMS/WhatsApp messages, checking delivery status, listing message history, and managing message records.",
+  "auth": {
+    "type": "api_key",
+    "instructions": "Authenticate with HTTP Basic auth. Recommended: API Key SID as username and API Key Secret as password. For local testing, Twilio also supports Account SID + Auth Token. Use your Account SID in the request path."
+  },
+  "external_docs": [
+    {
+      "description": "Twilio Messages resource API",
+      "url": "https://www.twilio.com/docs/messaging/api/message-resource"
+    },
+    {
+      "description": "Twilio API request/authentication guide",
+      "url": "https://www.twilio.com/docs/usage/requests-to-twilio"
+    },
+    {
+      "description": "Twilio Messaging pricing",
+      "url": "https://www.twilio.com/en-us/pricing/messaging"
+    }
+  ],
+  "http": {
+    "base_url": "https://api.twilio.com",
+    "endpoints": [
+      {
+        "name": "create-message",
+        "method": "POST",
+        "path": "/2010-04-01/Accounts/{AccountSid}/Messages.json",
+        "description": "Send an outbound message. Requires `To`, one sender field (`From` or `MessagingServiceSid`), and message content (`Body`, `MediaUrl`, or `ContentSid`).",
+        "body": {
+          "encoding": "application/x-www-form-urlencoded",
+          "required": [
+            "To"
+          ],
+          "sender_fields": [
+            "From",
+            "MessagingServiceSid"
+          ],
+          "content_fields": [
+            "Body",
+            "MediaUrl",
+            "ContentSid"
+          ]
+        },
+        "example": {
+          "To": "+14155551234",
+          "From": "+15017122661",
+          "Body": "Hello from the Twilio Messaging API"
+        }
+      },
+      {
+        "name": "fetch-message",
+        "method": "GET",
+        "path": "/2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json",
+        "description": "Fetch a single message resource by SID to inspect status, direction, segments, and delivery metadata."
+      },
+      {
+        "name": "list-messages",
+        "method": "GET",
+        "path": "/2010-04-01/Accounts/{AccountSid}/Messages.json",
+        "description": "List message resources for an account with paging and common filters.",
+        "query_params": [
+          "To",
+          "From",
+          "DateSent",
+          "PageSize",
+          "PageToken"
+        ]
+      },
+      {
+        "name": "redact-message-body",
+        "method": "POST",
+        "path": "/2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json",
+        "description": "Redact stored message content by updating the message and setting `Body` to an empty string.",
+        "body": {
+          "encoding": "application/x-www-form-urlencoded",
+          "required": [
+            "Body"
+          ]
+        },
+        "example": {
+          "Body": ""
+        }
+      },
+      {
+        "name": "delete-message",
+        "method": "DELETE",
+        "path": "/2010-04-01/Accounts/{AccountSid}/Messages/{Sid}.json",
+        "description": "Delete a message resource from the account."
+      }
+    ]
+  }
+}

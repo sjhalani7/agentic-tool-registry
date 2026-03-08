@@ -1,0 +1,15 @@
+{
+  "tool_id": "polymarket/cli",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-04T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://docs.polymarket.com",
+    "official_repo_url": "https://github.com/Polymarket/polymarket-cli",
+    "external_references": [
+      "https://polymarket.com",
+      "https://docs.polymarket.com/developers/CLOB/introduction"
+    ],
+    "notes": "Manual review confirmed Polymarket developer docs, official CLI repository, and market platform legitimacy."
+  }
+}

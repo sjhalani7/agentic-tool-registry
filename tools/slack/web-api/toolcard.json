@@ -1,0 +1,23 @@
+{
+  "id": "slack/web-api",
+  "name": "Slack Web API",
+  "publisher": {
+    "name": "Slack",
+    "url": "https://docs.slack.dev",
+    "verified": true
+  },
+  "capabilities": [
+    "messaging",
+    "conversations",
+    "users",
+    "workspace-automation",
+    "oauth"
+  ],
+  "description": "Slack's official Web API for sending messages, managing conversations, and reading workspace user/channel data via OAuth-scoped HTTP methods.",
+  "pricing": "Slack plan and app availability vary by workspace; see https://slack.com/pricing and Web API rate limits at https://docs.slack.dev/apis/web-api/rate-limits/.",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

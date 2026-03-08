@@ -1,0 +1,22 @@
+{
+  "id": "google/calendar-api",
+  "name": "Google Calendar API",
+  "publisher": {
+    "name": "Google",
+    "url": "https://developers.google.com/workspace/calendar/api",
+    "verified": true
+  },
+  "capabilities": [
+    "calendar-events",
+    "calendar-list",
+    "freebusy",
+    "change-watch"
+  ],
+  "description": "Google Calendar REST API for listing calendars, managing events, querying free/busy windows, and subscribing to calendar change notifications.",
+  "pricing": "No additional cost for Calendar API usage; quota limits apply. See official quota/pricing notes: https://developers.google.com/calendar/api/guides/quota",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "tool_id": "google/calendar-api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-08T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://developers.google.com/workspace/calendar/api/v3/reference",
+    "external_references": [
+      "https://developers.google.com/workspace/calendar/api/auth",
+      "https://developers.google.com/workspace/calendar/api/v3/reference/events/insert",
+      "https://developers.google.com/calendar/api/guides/quota"
+    ],
+    "notes": "Manual review confirmed official Google Calendar API reference, OAuth scope guidance, and first-party quota/pricing documentation."
+  }
+}

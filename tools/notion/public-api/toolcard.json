@@ -1,0 +1,23 @@
+{
+  "id": "notion/public-api",
+  "name": "Notion Public API",
+  "publisher": {
+    "name": "Notion",
+    "url": "https://www.notion.com",
+    "verified": true
+  },
+  "capabilities": [
+    "pages",
+    "blocks",
+    "data-sources",
+    "search",
+    "workspace-automation"
+  ],
+  "description": "Official Notion REST API for searching content, creating/updating pages, and editing block content in shared workspaces.",
+  "pricing": "Notion does not charge a separate API fee; workspace pricing for seats/features is listed at https://www.notion.com/pricing",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

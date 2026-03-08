@@ -1,0 +1,131 @@
+{
+  "tool_id": "notion/public-api",
+  "type": "http",
+  "summary": "Use Notion's official REST API to search workspace content, create or update pages, query data sources, and append block content.",
+  "auth": {
+    "type": "api_key",
+    "instructions": "Create a Notion integration (or complete OAuth), share target pages/data sources with it, then send its token as `Authorization: Bearer <token>` and include `Notion-Version: 2025-09-03`."
+  },
+  "external_docs": [
+    {
+      "description": "Notion API reference",
+      "url": "https://developers.notion.com/reference"
+    },
+    {
+      "description": "Authentication",
+      "url": "https://developers.notion.com/reference/authentication"
+    },
+    {
+      "description": "Versioning",
+      "url": "https://developers.notion.com/reference/versioning"
+    }
+  ],
+  "http": {
+    "base_url": "https://api.notion.com/v1",
+    "headers": [
+      {
+        "name": "Authorization",
+        "value": "Bearer <NOTION_TOKEN>"
+      },
+      {
+        "name": "Notion-Version",
+        "value": "2025-09-03"
+      },
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "search",
+        "method": "POST",
+        "path": "/search",
+        "description": "Search pages and data sources shared with the integration.",
+        "body": {
+          "query": "roadmap",
+          "filter": {
+            "property": "object",
+            "value": "page"
+          }
+        },
+        "example": {
+          "query": "Q1 planning"
+        }
+      },
+      {
+        "name": "create-page",
+        "method": "POST",
+        "path": "/pages",
+        "description": "Create a page in a parent page or data source.",
+        "body": {
+          "parent": {
+            "page_id": "<page_id>"
+          },
+          "properties": {
+            "title": {
+              "title": [
+                {
+                  "text": {
+                    "content": "New item"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "retrieve-page",
+        "method": "GET",
+        "path": "/pages/{page_id}",
+        "description": "Retrieve a page's metadata and properties by page ID.",
+        "query_params": [
+          "filter_properties"
+        ]
+      },
+      {
+        "name": "update-page",
+        "method": "PATCH",
+        "path": "/pages/{page_id}",
+        "description": "Update page properties or archive state.",
+        "body": {
+          "in_trash": false
+        }
+      },
+      {
+        "name": "query-data-source",
+        "method": "POST",
+        "path": "/data_sources/{data_source_id}/query",
+        "description": "Query and filter entries in a data source.",
+        "body": {
+          "page_size": 10
+        }
+      },
+      {
+        "name": "append-block-children",
+        "method": "PATCH",
+        "path": "/blocks/{block_id}/children",
+        "description": "Append child blocks to a page or block.",
+        "body": {
+          "children": [
+            {
+              "object": "block",
+              "type": "paragraph",
+              "paragraph": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Automated update"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

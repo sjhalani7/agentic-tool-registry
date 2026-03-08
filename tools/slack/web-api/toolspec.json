@@ -1,0 +1,109 @@
+{
+  "tool_id": "slack/web-api",
+  "type": "http",
+  "summary": "Slack Web API is an HTTPS RPC-style API at slack.com/api for workspace automation such as posting messages, opening DMs, and listing conversations with OAuth-scoped bot or user tokens.",
+  "auth": {
+    "type": "oauth",
+    "instructions": "Create a Slack app, request least-privilege scopes, install via OAuth, and send Authorization: Bearer <token> on API calls. For JSON write calls, set Content-Type: application/json and do not send tokens in query parameters."
+  },
+  "external_docs": [
+    {
+      "description": "Slack Web API overview",
+      "url": "https://docs.slack.dev/apis/web-api/"
+    },
+    {
+      "description": "OAuth installation flow",
+      "url": "https://docs.slack.dev/authentication/installing-with-oauth/"
+    },
+    {
+      "description": "Web API methods reference",
+      "url": "https://docs.slack.dev/reference/methods/"
+    }
+  ],
+  "http": {
+    "base_url": "https://slack.com/api",
+    "headers": [
+      {
+        "name": "Authorization",
+        "value": "Bearer <SLACK_BOT_OR_USER_TOKEN>"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "post-message",
+        "method": "POST",
+        "path": "/chat.postMessage",
+        "description": "Sends a message to a channel or DM. Requires chat:write.",
+        "body": {
+          "type": "object",
+          "required": [
+            "channel",
+            "text"
+          ],
+          "properties": {
+            "channel": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "channel": "C123ABC456",
+          "text": "Deployment completed."
+        }
+      },
+      {
+        "name": "list-conversations",
+        "method": "GET",
+        "path": "/conversations.list",
+        "description": "Lists channel-like conversations visible to the token. Requires channels:read/groups:read/im:read/mpim:read based on requested types.",
+        "query_params": [
+          "types",
+          "exclude_archived",
+          "limit",
+          "cursor"
+        ],
+        "example": {
+          "types": "public_channel,private_channel",
+          "limit": "100"
+        }
+      },
+      {
+        "name": "open-direct-message",
+        "method": "POST",
+        "path": "/conversations.open",
+        "description": "Opens or resumes a DM/MPIM. Slack docs list required scopes as channels:manage, groups:write, im:write, mpim:write for bot tokens, or channels:write, groups:write, im:write, mpim:write for user tokens.",
+        "body": {
+          "type": "object",
+          "properties": {
+            "users": {
+              "type": "string",
+              "description": "Comma-separated user IDs"
+            },
+            "return_im": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "users": "U12345,U67890",
+          "return_im": true
+        }
+      },
+      {
+        "name": "lookup-user-by-email",
+        "method": "GET",
+        "path": "/users.lookupByEmail",
+        "description": "Finds a user by email address. Requires users:read.email.",
+        "query_params": [
+          "email"
+        ],
+        "example": {
+          "email": "user@example.com"
+        }
+      }
+    ]
+  }
+}

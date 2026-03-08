@@ -1,0 +1,15 @@
+{
+  "tool_id": "stripe/purl-payments",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-04T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://www.purl.dev/docs",
+    "official_repo_url": "https://github.com/stripe/purl",
+    "external_references": [
+      "https://www.purl.dev",
+      "https://github.com/stripe/purl/blob/main/README.md"
+    ],
+    "notes": "Manual review confirmed purl docs and official repository references for payment-enabled API usage."
+  }
+}

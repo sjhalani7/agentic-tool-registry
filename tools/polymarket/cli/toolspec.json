@@ -1,0 +1,43 @@
+{
+  "tool_id": "polymarket/cli",
+  "type": "cli",
+  "summary": "Official Polymarket CLI for market/event discovery and order book inspection.",
+  "auth": {
+    "type": "none",
+    "instructions": "Read-only commands can run without credentials; follow Polymarket docs for any authenticated actions and API keys."
+  },
+  "external_docs": [
+    {
+      "description": "Polymarket CLI repository",
+      "url": "https://github.com/Polymarket/polymarket-cli"
+    },
+    {
+      "description": "Polymarket developer docs",
+      "url": "https://docs.polymarket.com"
+    }
+  ],
+  "cli": {
+    "binary": "polymarket",
+    "install": "Follow installation instructions in https://github.com/Polymarket/polymarket-cli",
+    "commands": [
+      {
+        "name": "events list",
+        "usage": "polymarket events list --limit 5",
+        "description": "Lists events available on Polymarket with paging options.",
+        "example": "polymarket events list --limit 10"
+      },
+      {
+        "name": "markets list",
+        "usage": "polymarket markets list --limit 25 --active true",
+        "description": "Lists markets with filters such as active/closed status and pagination options.",
+        "example": "polymarket markets list --limit 25 --closed false"
+      },
+      {
+        "name": "clob book",
+        "usage": "polymarket clob book <token-id>",
+        "description": "Fetches bids/asks for a market token from the CLOB.",
+        "example": "polymarket clob book 1234567890"
+      }
+    ]
+  }
+}

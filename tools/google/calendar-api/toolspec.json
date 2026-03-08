@@ -1,0 +1,170 @@
+{
+  "tool_id": "google/calendar-api",
+  "type": "http",
+  "summary": "Google Calendar API v3 for calendar discovery, event CRUD workflows, free/busy checks, and watch channels for sync automation.",
+  "auth": {
+    "type": "oauth",
+    "instructions": "Enable Google Calendar API in a Google Cloud project, configure OAuth consent and client credentials, then send OAuth 2.0 access tokens as Authorization: Bearer <token>. Request least-privilege scopes required by each endpoint (for example https://www.googleapis.com/auth/calendar.events or https://www.googleapis.com/auth/calendar.readonly)."
+  },
+  "external_docs": [
+    {
+      "description": "Calendar API v3 reference",
+      "url": "https://developers.google.com/workspace/calendar/api/v3/reference"
+    },
+    {
+      "description": "Calendar API auth and scopes",
+      "url": "https://developers.google.com/workspace/calendar/api/auth"
+    },
+    {
+      "description": "Calendar API quotas and pricing notes",
+      "url": "https://developers.google.com/calendar/api/guides/quota"
+    }
+  ],
+  "http": {
+    "base_url": "https://www.googleapis.com/calendar/v3",
+    "headers": [
+      {
+        "name": "Authorization",
+        "value": "Bearer <ACCESS_TOKEN>"
+      },
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "list-calendar-list",
+        "method": "GET",
+        "path": "/users/me/calendarList",
+        "description": "Returns calendars on the authenticated user's calendar list.",
+        "query_params": [
+          "maxResults",
+          "minAccessRole",
+          "pageToken",
+          "showDeleted",
+          "showHidden",
+          "syncToken"
+        ]
+      },
+      {
+        "name": "list-events",
+        "method": "GET",
+        "path": "/calendars/{calendarId}/events",
+        "description": "Lists events on a calendar and supports time-window and incremental sync filters.",
+        "query_params": [
+          "timeMin",
+          "timeMax",
+          "singleEvents",
+          "orderBy",
+          "maxResults",
+          "pageToken",
+          "syncToken",
+          "q"
+        ]
+      },
+      {
+        "name": "insert-event",
+        "method": "POST",
+        "path": "/calendars/{calendarId}/events",
+        "description": "Creates an event on the specified calendar.",
+        "query_params": [
+          "conferenceDataVersion",
+          "maxAttendees",
+          "sendUpdates",
+          "supportsAttachments"
+        ],
+        "body": {
+          "summary": "string",
+          "start": {
+            "dateTime": "RFC3339 datetime"
+          },
+          "end": {
+            "dateTime": "RFC3339 datetime"
+          }
+        },
+        "example": {
+          "summary": "Team sync",
+          "start": {
+            "dateTime": "2026-03-10T15:00:00Z"
+          },
+          "end": {
+            "dateTime": "2026-03-10T15:30:00Z"
+          }
+        }
+      },
+      {
+        "name": "patch-event",
+        "method": "PATCH",
+        "path": "/calendars/{calendarId}/events/{eventId}",
+        "description": "Partially updates an event (Google notes each patch request consumes three quota units).",
+        "query_params": [
+          "conferenceDataVersion",
+          "maxAttendees",
+          "sendUpdates",
+          "supportsAttachments"
+        ],
+        "body": {
+          "summary": "string",
+          "location": "string",
+          "description": "string"
+        },
+        "example": {
+          "summary": "Updated team sync"
+        }
+      },
+      {
+        "name": "delete-event",
+        "method": "DELETE",
+        "path": "/calendars/{calendarId}/events/{eventId}",
+        "description": "Deletes an event from the specified calendar.",
+        "query_params": [
+          "sendUpdates"
+        ]
+      },
+      {
+        "name": "query-freebusy",
+        "method": "POST",
+        "path": "/freeBusy",
+        "description": "Returns free/busy blocks for one or more calendars within a time range.",
+        "body": {
+          "timeMin": "RFC3339 datetime",
+          "timeMax": "RFC3339 datetime",
+          "items": [
+            {
+              "id": "calendarId"
+            }
+          ]
+        },
+        "example": {
+          "timeMin": "2026-03-10T00:00:00Z",
+          "timeMax": "2026-03-11T00:00:00Z",
+          "items": [
+            {
+              "id": "primary"
+            }
+          ]
+        }
+      },
+      {
+        "name": "watch-events",
+        "method": "POST",
+        "path": "/calendars/{calendarId}/events/watch",
+        "description": "Creates a notification channel to watch for event resource changes.",
+        "query_params": [
+          "eventTypes"
+        ],
+        "body": {
+          "id": "channel-id",
+          "type": "web_hook",
+          "address": "https callback URL"
+        },
+        "example": {
+          "id": "events-channel-123",
+          "type": "web_hook",
+          "address": "https://example.com/calendar/webhook"
+        }
+      }
+    ]
+  }
+}

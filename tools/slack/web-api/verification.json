@@ -1,0 +1,16 @@
+{
+  "tool_id": "slack/web-api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-08T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://docs.slack.dev/apis/web-api/",
+    "external_references": [
+      "https://docs.slack.dev/reference/methods/chat.postMessage/",
+      "https://docs.slack.dev/reference/methods/conversations.open/",
+      "https://docs.slack.dev/reference/methods/conversations.list/",
+      "https://docs.slack.dev/authentication/installing-with-oauth/"
+    ],
+    "notes": "Manual review confirmed Slack first-party docs for Web API URL pattern (https://slack.com/api/*), OAuth bearer-token auth, and endpoint scope requirements."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "stripe/purl-payments",
+  "name": "Stripe purl CLI",
+  "publisher": {
+    "name": "Stripe",
+    "url": "https://www.purl.dev",
+    "verified": true
+  },
+  "capabilities": [
+    "payments",
+    "http402",
+    "cli"
+  ],
+  "description": "Stripe's `purl` command-line tool that negotiates HTTP 402 challenges, pays via Stripe wallets, and replays the original request.",
+  "pricing": "Free CLI; each call pays the downstream provider's quoted x402 price plus Stripe network fees (see https://www.purl.dev/docs).",
+  "currency": "USD",
+  "payment": {
+    "is_paid": true,
+    "purl_supported": true
+  }
+}

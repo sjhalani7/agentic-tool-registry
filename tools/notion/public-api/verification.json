@@ -1,0 +1,15 @@
+{
+  "tool_id": "notion/public-api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-08T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://developers.notion.com/reference",
+    "external_references": [
+      "https://developers.notion.com/reference/authentication",
+      "https://developers.notion.com/reference/versioning",
+      "https://developers.notion.com/reference/query-a-data-source"
+    ],
+    "notes": "Manual review confirms official Notion docs define base URL https://api.notion.com/v1 and require bearer-token auth via Authorization plus a Notion-Version request header."
+  }
+}

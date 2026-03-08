@@ -1,18 +1,13 @@
 {
   "channel": "stable",
-  "version": "2026-03-04",
+  "version": "2026-03-08",
   "description": "Production-vetted tools for default agent usage.",
   "tools": [
-    "anthropic/claude-code",
-    "deepgram/neuro-transcribe",
-    "huggingface/text-generation-inference",
-    "modal/serverless-functions",
-    "openai/evals",
-    "openai/gpt-4o",
-    "openrouter/router",
+    "google/calendar-api",
+    "notion/public-api",
     "polymarket/cli",
+    "slack/web-api",
     "stripe/purl-payments",
-    "together/llama3-chat",
-    "x402/index"
+    "twilio/messaging-api"
   ]
 }
