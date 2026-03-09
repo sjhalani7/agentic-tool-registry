@@ -12,7 +12,7 @@
     "cli"
   ],
   "description": "Stripe's `purl` command-line tool that negotiates HTTP 402 challenges, pays via Stripe wallets, and replays the original request.",
-  "pricing": "Free CLI; each call pays the downstream provider's quoted x402 price plus Stripe network fees (see https://www.purl.dev/docs).",
+  "pricing": "Free CLI; each call pays the downstream provider's quoted x402 price plus Stripe network fees (see https://www.purl.dev).",
   "currency": "USD",
   "payment": {
     "is_paid": true,

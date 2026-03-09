@@ -23,6 +23,7 @@ env/
 .ruff_cache/
 .tox/
 .nox/
+.cache/
 .coverage
 .coverage.*
 htmlcov/

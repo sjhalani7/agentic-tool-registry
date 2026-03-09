@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import Any, List
 from urllib.parse import urlparse
 
+from common_utils import iter_tool_dirs
+
 ROOT = Path(__file__).resolve().parents[1]
 TOOLCARD_SCHEMA_PATH = ROOT / "schemas" / "toolcard.schema.json"
 TOOLSPEC_SCHEMA_PATH = ROOT / "schemas" / "toolspec.schema.json"
@@ -52,13 +54,6 @@ def load_json(path: Path, failures: List[str]) -> Any:
     except Exception as exc:
         failures.append(f"{path}: invalid JSON ({exc})")
         return None
-
-
-def iter_tool_dirs() -> List[Path]:
-    """Return sorted tool directories under tools/<publisher>/<tool>."""
-    if not TOOLS_ROOT.exists():
-        return []
-    return sorted(p for p in TOOLS_ROOT.glob("*/*") if p.is_dir())
 
 
 def normalize_host(host: str | None) -> str:
@@ -478,7 +473,7 @@ def main() -> int:
     spec_schema = load_schema(TOOLSPEC_SCHEMA_PATH)
     verification_schema = load_schema(VERIFICATION_SCHEMA_PATH)
 
-    tool_dirs = iter_tool_dirs()
+    tool_dirs = iter_tool_dirs(TOOLS_ROOT)
     if not tool_dirs:
         print("No tools found.")
         return 1

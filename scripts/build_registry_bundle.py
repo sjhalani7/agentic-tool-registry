@@ -2,7 +2,6 @@
 """Build a versioned stable-channel registry snapshot under dist/."""
 from __future__ import annotations
 
-import hashlib
 import json
 import subprocess
 import sys
@@ -10,18 +9,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from common_utils import iter_tool_dirs, load_json, sha256_file, write_json
+
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS_ROOT = ROOT / "tools"
 CHANNELS_ROOT = ROOT / "channels"
 DIST_ROOT = ROOT / "dist"
 REQUIRED_TOOL_FILES = ("toolcard.json", "toolspec.json", "verification.json")
 CHANNEL_FILES = ("stable.json", "community.json", "experimental.json")
-
-
-def load_json(path: Path) -> Any:
-    """Load a JSON file from disk."""
-    with path.open() as handle:
-        return json.load(handle)
 
 
 def run_validator() -> None:
@@ -47,7 +42,7 @@ def git_short_sha() -> str:
 def collect_tool_records() -> dict[str, dict[str, Any]]:
     """Load and validate required per-tool files into an in-memory map."""
     records: dict[str, dict[str, Any]] = {}
-    for tool_dir in sorted(path for path in TOOLS_ROOT.glob("*/*") if path.is_dir()):
+    for tool_dir in iter_tool_dirs(TOOLS_ROOT):
         missing = [name for name in REQUIRED_TOOL_FILES if not (tool_dir / name).exists()]
         if missing:
             raise SystemExit(f"Bundling aborted: {tool_dir} missing {', '.join(missing)}")
@@ -132,26 +127,12 @@ def bundle_version(created_at: datetime) -> str:
     return version
 
 
-def write_json(path: Path, payload: Any) -> None:
-    """Write pretty, sorted JSON output to a file."""
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-
-
 def write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
     """Write JSONL records as one compact JSON object per line."""
     with path.open("w") as handle:
         for record in records:
             handle.write(json.dumps(record, sort_keys=True, separators=(",", ":")))
             handle.write("\n")
-
-
-def file_sha256(path: Path) -> str:
-    """Compute and return a SHA256 digest for a file."""
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(65536), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def build_bundle() -> Path:
@@ -186,7 +167,7 @@ def build_bundle() -> Path:
     artifacts: dict[str, dict[str, Any]] = {}
     for artifact in artifact_paths:
         artifacts[artifact.name] = {
-            "sha256": file_sha256(artifact),
+            "sha256": sha256_file(artifact),
             "bytes": artifact.stat().st_size,
         }
 

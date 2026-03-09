@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -12,22 +11,11 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
+from common_utils import iter_tool_dirs, load_json
+
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS_ROOT = ROOT / "tools"
 USER_AGENT = "oss-mktpl-link-check/1.0"
-
-
-def iter_tool_dirs() -> list[Path]:
-    """Return sorted tool directories under tools/<publisher>/<tool>."""
-    if not TOOLS_ROOT.exists():
-        return []
-    return sorted(path for path in TOOLS_ROOT.glob("*/*") if path.is_dir())
-
-
-def load_json(path: Path) -> Any:
-    """Load a JSON file from disk."""
-    with path.open() as handle:
-        return json.load(handle)
 
 
 def add_url(index: dict[str, set[str]], value: Any, source: str) -> None:
@@ -39,7 +27,7 @@ def add_url(index: dict[str, set[str]], value: Any, source: str) -> None:
 def collect_urls() -> dict[str, set[str]]:
     """Collect all registry URLs from toolcards, toolspecs, and verification records."""
     urls: dict[str, set[str]] = defaultdict(set)
-    for tool_dir in iter_tool_dirs():
+    for tool_dir in iter_tool_dirs(TOOLS_ROOT):
         card_path = tool_dir / "toolcard.json"
         spec_path = tool_dir / "toolspec.json"
         verification_path = tool_dir / "verification.json"
