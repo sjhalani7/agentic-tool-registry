@@ -9,9 +9,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from common_utils import iter_tool_dirs, load_json, sha256_file, write_json
+from src.utils.common_utils import iter_tool_dirs, load_json, sha256_file, write_json
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 TOOLS_ROOT = ROOT / "tools"
 CHANNELS_ROOT = ROOT / "channels"
 DIST_ROOT = ROOT / "dist"
@@ -21,8 +21,7 @@ CHANNEL_FILES = ("stable.json", "community.json", "experimental.json")
 
 def run_validator() -> None:
     """Run the registry validator and abort bundling on failure."""
-    validator = ROOT / "scripts" / "validate_toolcards.py"
-    cmd = [sys.executable, str(validator)]
+    cmd = [sys.executable, "-m", "src.commands.validate_toolcards"]
     result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if result.returncode != 0:
         sys.stderr.write(result.stdout)

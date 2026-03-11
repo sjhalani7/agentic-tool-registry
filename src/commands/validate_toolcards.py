@@ -11,9 +11,9 @@ from pathlib import Path
 from typing import Any, List
 from urllib.parse import urlparse
 
-from common_utils import iter_tool_dirs
+from src.utils.common_utils import iter_tool_dirs
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 TOOLCARD_SCHEMA_PATH = ROOT / "schemas" / "toolcard.schema.json"
 TOOLSPEC_SCHEMA_PATH = ROOT / "schemas" / "toolspec.schema.json"
 VERIFICATION_SCHEMA_PATH = ROOT / "schemas" / "tool-verification.schema.json"

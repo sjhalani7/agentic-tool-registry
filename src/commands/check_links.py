@@ -11,9 +11,9 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
-from common_utils import iter_tool_dirs, load_json
+from src.utils.common_utils import iter_tool_dirs, load_json
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 TOOLS_ROOT = ROOT / "tools"
 USER_AGENT = "oss-mktpl-link-check/1.0"
 
