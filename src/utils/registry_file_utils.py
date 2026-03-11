@@ -119,3 +119,17 @@ def load_object_records(
     if path.suffix == ".jsonl":
         return parse_jsonl_object_records(path, artifact_name, fail)
     return parse_json_array_object_records(path, artifact_name, fail)
+
+
+def order_record_fields(record: dict[str, Any], leading_fields: tuple[str, ...]) -> dict[str, Any]:
+    """Return a record with selected fields first, then remaining keys in original order."""
+    ordered: dict[str, Any] = {}
+    seen: set[str] = set()
+    for field in leading_fields:
+        if field in record:
+            ordered[field] = record[field]
+            seen.add(field)
+    for key, value in record.items():
+        if key not in seen:
+            ordered[key] = value
+    return ordered

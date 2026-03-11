@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI entrypoint for local registry sync and cache search."""
+"""CLI entrypoint for command execution"""
 from __future__ import annotations
 
 import argparse
@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from src.commands.search import run_search
+from src.commands.show import run_show
 from src.commands.sync import DEFAULT_CACHE_DIR, DEFAULT_SOURCE_DIR, SUPPORTED_CHANNELS, run_sync
 
 
@@ -55,6 +56,20 @@ def build_parser() -> argparse.ArgumentParser:
         default=str(DEFAULT_CACHE_DIR),
         help=f"Cache directory path (default: {DEFAULT_CACHE_DIR}).",
     )
+
+    show_parser = subparsers.add_parser(
+        "show",
+        help="Show one cached ToolCard by tool ID slug.",
+    )
+    show_parser.add_argument(
+        "tool_id",
+        help="Tool ID slug to show (case-insensitive match).",
+    )
+    show_parser.add_argument(
+        "--cache-dir",
+        default=str(DEFAULT_CACHE_DIR),
+        help=f"Cache directory path (default: {DEFAULT_CACHE_DIR}).",
+    )
     return parser
 
 
@@ -66,10 +81,11 @@ def main(argv: list[str] | None = None) -> int:
         return run_sync(args)
     if args.command == "search":
         return run_search(Path(args.cache_dir))
+    if args.command == "show":
+        return run_show(Path(args.cache_dir), args.tool_id)
     parser.print_help()
     return 1
 
 
 if __name__ == "__main__":
     sys.exit(main())
-

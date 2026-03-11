@@ -13,6 +13,11 @@ from src.utils.registry_file_utils import (
 )
 
 
+def normalize_tool_id(raw_tool_id: str) -> str:
+    """Normalize a tool ID for case-insensitive matching."""
+    return raw_tool_id.strip().casefold()
+
+
 def load_toolcards(
     cache_dir: Path,
     fail: Callable[[str], NoReturn],

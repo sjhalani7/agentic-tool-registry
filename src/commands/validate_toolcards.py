@@ -492,6 +492,8 @@ def main() -> int:
     failures: List[str] = []
     discovered_tool_ids: set[str] = set()
     verified_tool_ids: set[str] = set()
+    seen_tool_id_paths: dict[str, Path] = {}
+    seen_tool_name_paths: dict[str, Path] = {}
 
     for tool_dir in tool_dirs:
         card_path = tool_dir / "toolcard.json"
@@ -515,8 +517,28 @@ def main() -> int:
         if not isinstance(card_data, dict) or not isinstance(spec_data, dict) or not isinstance(verification_data, dict):
             continue
 
-        if isinstance(card_data.get("id"), str):
-            discovered_tool_ids.add(card_data["id"])
+        card_id = card_data.get("id")
+        if isinstance(card_id, str):
+            existing_id_path = seen_tool_id_paths.get(card_id)
+            if existing_id_path is not None:
+                failures.append(
+                    f"{card_path}: duplicate toolcard id '{card_id}' already defined in {existing_id_path}"
+                )
+            else:
+                seen_tool_id_paths[card_id] = card_path
+                discovered_tool_ids.add(card_id)
+
+        card_name = card_data.get("name")
+        if isinstance(card_name, str):
+            normalized_name = card_name.strip().casefold()
+            if normalized_name:
+                existing_name_path = seen_tool_name_paths.get(normalized_name)
+                if existing_name_path is not None:
+                    failures.append(
+                        f"{card_path}: duplicate toolcard name '{card_name}' already defined in {existing_name_path}"
+                    )
+                else:
+                    seen_tool_name_paths[normalized_name] = card_path
 
         size = card_path.stat().st_size
         if size > SIZE_LIMIT:
@@ -551,8 +573,8 @@ def main() -> int:
         publisher_data = card_data.get("publisher")
         publisher_verified = isinstance(publisher_data, dict) and publisher_data.get("verified") is True
         if verification_data.get("status") == "verified" and publisher_verified:
-            if isinstance(card_data.get("id"), str):
-                verified_tool_ids.add(card_data["id"])
+            if isinstance(card_id, str):
+                verified_tool_ids.add(card_id)
 
     failures.extend(validate_channels(discovered_tool_ids, verified_tool_ids))
 
