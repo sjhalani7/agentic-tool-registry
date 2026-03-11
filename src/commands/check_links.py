@@ -16,6 +16,7 @@ from src.utils.common_utils import iter_tool_dirs, load_json
 ROOT = Path(__file__).resolve().parents[2]
 TOOLS_ROOT = ROOT / "tools"
 USER_AGENT = "oss-mktpl-link-check/1.0"
+API_BASE_URL_SOURCE_SUFFIXES = ("toolspec.http.base_url", "toolspec.mcp.server_url")
 
 
 def add_url(index: dict[str, set[str]], value: Any, source: str) -> None:
@@ -90,6 +91,11 @@ def http_status(url: str, method: str, timeout: float) -> int:
         return int(response.getcode())
 
 
+def is_api_base_url_source_only(sources: set[str]) -> bool:
+    """Return whether all URL sources are API base URL fields."""
+    return bool(sources) and all(source.endswith(API_BASE_URL_SOURCE_SUFFIXES) for source in sources)
+
+
 def validate_live(url: str, timeout: float) -> str | None:
     """Run live reachability checks and return an error string on failure."""
     try:
@@ -98,18 +104,20 @@ def validate_live(url: str, timeout: float) -> str | None:
             return None
         return f"HEAD returned {status} (expected 2xx)"
     except HTTPError as exc:
-        if int(exc.code) in {405, 501}:
+        head_code = int(exc.code)
+        if head_code in {405, 501}:
             # Some endpoints reject HEAD even when GET is valid.
             try:
                 status = http_status(url, "GET", timeout)
                 if 200 <= status < 300:
                     return None
-                return f"GET returned {status} after HEAD {exc.code} (expected 2xx)"
+                return f"GET returned {status} after HEAD {head_code} (expected 2xx)"
             except HTTPError as get_exc:
-                return f"GET returned {int(get_exc.code)} after HEAD {exc.code} (expected 2xx)"
+                get_code = int(get_exc.code)
+                return f"GET returned {get_code} after HEAD {head_code} (expected 2xx)"
             except URLError as get_exc:
-                return f"GET failed after HEAD {exc.code}: {get_exc.reason}"
-        return f"HEAD returned {int(exc.code)} (expected 2xx)"
+                return f"GET failed after HEAD {head_code}: {get_exc.reason}"
+        return f"HEAD returned {head_code} (expected 2xx)"
     except URLError as exc:
         return f"HEAD failed: {exc.reason}"
 
@@ -133,6 +141,8 @@ def main() -> int:
             failures.append(f"{url}: {syntax_error} | sources={sorted(urls[url])}")
             continue
         if args.offline:
+            continue
+        if is_api_base_url_source_only(urls[url]):
             continue
         live_error = validate_live(url, args.timeout)
         if live_error:
