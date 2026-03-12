@@ -6,6 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from src.commands.init_tool import run_init_tool
 from src.commands.resolve import run_resolve
 from src.commands.search import run_search
 from src.commands.show import run_show
@@ -85,6 +86,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=str(DEFAULT_CACHE_DIR),
         help=f"Cache directory path (default: {DEFAULT_CACHE_DIR}).",
     )
+
+    init_parser = subparsers.add_parser(
+        "init-tool",
+        help="Scaffold a new tool folder and required manifests.",
+    )
+    init_parser.add_argument(
+        "--interactive",
+        action="store_true",
+        help="Run interactive form prompts (required for MVP).",
+    )
     return parser
 
 
@@ -100,6 +111,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_show(Path(args.cache_dir), args.tool_id)
     if args.command == "resolve":
         return run_resolve(Path(args.cache_dir), args.tool_id)
+    if args.command == "init-tool":
+        return run_init_tool(args)
     parser.print_help()
     return 1
 
