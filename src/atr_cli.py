@@ -6,6 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from src.commands.resolve import run_resolve
 from src.commands.search import run_search
 from src.commands.show import run_show
 from src.commands.sync import DEFAULT_CACHE_DIR, DEFAULT_SOURCE_DIR, SUPPORTED_CHANNELS, run_sync
@@ -70,6 +71,20 @@ def build_parser() -> argparse.ArgumentParser:
         default=str(DEFAULT_CACHE_DIR),
         help=f"Cache directory path (default: {DEFAULT_CACHE_DIR}).",
     )
+
+    resolve_parser = subparsers.add_parser(
+        "resolve",
+        help="Resolve one cached ToolSpec by tool ID slug.",
+    )
+    resolve_parser.add_argument(
+        "tool_id",
+        help="Tool ID slug to resolve (case-insensitive match).",
+    )
+    resolve_parser.add_argument(
+        "--cache-dir",
+        default=str(DEFAULT_CACHE_DIR),
+        help=f"Cache directory path (default: {DEFAULT_CACHE_DIR}).",
+    )
     return parser
 
 
@@ -83,6 +98,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_search(Path(args.cache_dir))
     if args.command == "show":
         return run_show(Path(args.cache_dir), args.tool_id)
+    if args.command == "resolve":
+        return run_resolve(Path(args.cache_dir), args.tool_id)
     parser.print_help()
     return 1
 
