@@ -17,7 +17,7 @@ from src.utils.common_utils import load_json, sha256_file, write_json
 
 DEFAULT_SOURCE_DIR = Path("./dist")
 DEFAULT_CACHE_DIR = Path.home() / ".cache" / "agentic-tool-registry"
-DEFAULT_REMOTE_BASE_URL = "https://sjhalani7.github.io/agentic-tool-registry/dist"
+DEFAULT_REMOTE_BASE_URL = "https://sjhalani7.github.io/agentic-tool-registry"
 SUPPORTED_CHANNELS = {"stable", "community", "experimental"}
 SUPPORTED_SOURCE_MODES = {"remote", "local"}
 

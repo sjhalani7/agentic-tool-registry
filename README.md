@@ -143,7 +143,7 @@ Behavior:
 - deploys `dist/` to GitHub Pages
 
 Remote base URL for `atr sync` default:
-- `https://sjhalani7.github.io/agentic-tool-registry/dist`
+- `https://sjhalani7.github.io/agentic-tool-registry`
 
 ## CLI Commands
 
@@ -161,7 +161,7 @@ pipx install git+https://github.com/sjhalani7/agentic-tool-registry.git
 
 ```bash
 ./bin/atr sync
-./bin/atr sync --source remote --remote-base-url <https-dist-url> --version <bundle-version>
+./bin/atr sync --source remote --remote-base-url <https-registry-url> --version <bundle-version>
 ./bin/atr sync --source local --source-dir ./dist
 ./bin/atr sync --version <bundle-version>
 ./bin/atr sync --channel community --allow-risky-channel
@@ -170,9 +170,9 @@ pipx install git+https://github.com/sjhalani7/agentic-tool-registry.git
 
 Behavior:
 - defaults to remote source:
-  - `https://sjhalani7.github.io/agentic-tool-registry/dist`
+  - `https://sjhalani7.github.io/agentic-tool-registry`
 - supports local override with `--source local --source-dir ./dist`
-- defaults to latest bundle version from remote `dist/index.json` (or local version directories)
+- defaults to latest bundle version from remote `index.json` (or local version directories)
 - verifies artifact checksums from `manifest.json`
 - caches snapshot under `~/.cache/agentic-tool-registry/snapshots/<version>/`
 - writes active state to `~/.cache/agentic-tool-registry/current.json`
