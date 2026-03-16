@@ -45,6 +45,7 @@ dist/<bundle-version>/
   toolcards.bundle.jsonl
   toolspecs.bundle.jsonl
   verifications.bundle.jsonl
+dist/index.json
 ```
 
 ## Submission Workflow
@@ -113,6 +114,36 @@ Bundler behavior:
 - bundles `stable` channel only
 - includes verified tools only
 - writes versioned artifacts to `dist/<timestamp>-<gitsha>/`
+- updates `dist/index.json` with available versions and `latest`
+
+For remote sync, `dist/` must be published at a stable HTTPS URL.
+
+### Automated GitHub Bundle Build
+
+Workflow: `.github/workflows/build-registry-bundle.yml`
+
+Triggers:
+- manual run only (`workflow_dispatch`)
+
+Behavior:
+- runs registry validation
+- builds a fresh bundle (`python3 -m src.commands.build_registry_bundle`)
+- uploads `dist/` as a GitHub Actions artifact (`registry-dist-<sha>`)
+
+### Publish Dist to GitHub Pages
+
+Workflow: `.github/workflows/publish-registry-pages.yml`
+
+Triggers:
+- manual run only (`workflow_dispatch`)
+
+Behavior:
+- runs registry validation
+- builds a fresh bundle
+- deploys `dist/` to GitHub Pages
+
+Remote base URL for `atr sync` default:
+- `https://sjhalani7.github.io/agentic-tool-registry/dist`
 
 ## CLI Commands
 
@@ -120,21 +151,32 @@ Supported binary names:
 - `atr`
 - `agentic-tool-registry`
 
+Install with `pipx`:
+
+```bash
+pipx install git+https://github.com/sjhalani7/agentic-tool-registry.git
+```
+
 ### `sync`
 
 ```bash
 ./bin/atr sync
+./bin/atr sync --source remote --remote-base-url <https-dist-url> --version <bundle-version>
+./bin/atr sync --source local --source-dir ./dist
 ./bin/atr sync --version <bundle-version>
 ./bin/atr sync --channel community --allow-risky-channel
-./bin/atr sync --source-dir ./dist --cache-dir ~/.cache/agentic-tool-registry
+./bin/atr sync --cache-dir ~/.cache/agentic-tool-registry
 ```
 
 Behavior:
-- reads local bundle from `dist/`
-- defaults to latest bundle version
+- defaults to remote source:
+  - `https://sjhalani7.github.io/agentic-tool-registry/dist`
+- supports local override with `--source local --source-dir ./dist`
+- defaults to latest bundle version from remote `dist/index.json` (or local version directories)
 - verifies artifact checksums from `manifest.json`
 - caches snapshot under `~/.cache/agentic-tool-registry/snapshots/<version>/`
 - writes active state to `~/.cache/agentic-tool-registry/current.json`
+- after sync, run `./bin/atr search` to list available tools
 
 ### `search`
 

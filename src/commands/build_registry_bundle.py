@@ -134,6 +134,37 @@ def write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
             handle.write("\n")
 
 
+def write_dist_index() -> None:
+    """Write dist/index.json describing available bundle versions."""
+    versions: list[dict[str, Any]] = []
+    for path in sorted(DIST_ROOT.iterdir()):
+        if not path.is_dir():
+            continue
+        manifest_path = path / "manifest.json"
+        if not manifest_path.exists():
+            continue
+        manifest = load_json(manifest_path)
+        if not isinstance(manifest, dict):
+            continue
+        versions.append(
+            {
+                "version": path.name,
+                "channel": manifest.get("channel"),
+                "created_at": manifest.get("created_at"),
+                "source_commit": manifest.get("source_commit"),
+                "tool_count": manifest.get("tool_count"),
+            }
+        )
+
+    latest = versions[-1]["version"] if versions else None
+    index = {
+        "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "latest": latest,
+        "versions": versions,
+    }
+    write_json(DIST_ROOT / "index.json", index)
+
+
 def build_bundle() -> Path:
     """Build a stable-channel snapshot bundle and return the output directory."""
     run_validator()
@@ -180,6 +211,7 @@ def build_bundle() -> Path:
         "artifacts": artifacts,
     }
     write_json(out_dir / "manifest.json", manifest)
+    write_dist_index()
 
     return out_dir
 

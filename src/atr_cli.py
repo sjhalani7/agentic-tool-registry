@@ -10,22 +10,43 @@ from src.commands.init_tool import run_init_tool
 from src.commands.resolve import run_resolve
 from src.commands.search import run_search
 from src.commands.show import run_show
-from src.commands.sync import DEFAULT_CACHE_DIR, DEFAULT_SOURCE_DIR, SUPPORTED_CHANNELS, run_sync
+from src.commands.sync import (
+    DEFAULT_CACHE_DIR,
+    DEFAULT_REMOTE_BASE_URL,
+    DEFAULT_SOURCE_DIR,
+    SUPPORTED_CHANNELS,
+    SUPPORTED_SOURCE_MODES,
+    run_sync,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
     """Construct the CLI argument parser."""
     parser = argparse.ArgumentParser(
         prog="agentic-tool-registry",
-        description="CLI for syncing local registry bundles into cache.",
+        description="CLI for syncing remote/local registry bundles into cache.",
     )
     subparsers = parser.add_subparsers(dest="command")
 
-    sync_parser = subparsers.add_parser("sync", help="Sync a local bundle snapshot into cache.")
+    sync_parser = subparsers.add_parser("sync", help="Sync a remote or local bundle snapshot into cache.")
+    sync_parser.add_argument(
+        "--source",
+        default="remote",
+        choices=sorted(SUPPORTED_SOURCE_MODES),
+        help="Bundle source mode: remote (default) or local.",
+    )
+    sync_parser.add_argument(
+        "--remote-base-url",
+        default=DEFAULT_REMOTE_BASE_URL,
+        help=(
+            "Remote dist base URL for source=remote "
+            f"(default: {DEFAULT_REMOTE_BASE_URL})."
+        ),
+    )
     sync_parser.add_argument(
         "--source-dir",
         default=str(DEFAULT_SOURCE_DIR),
-        help=f"Local bundle source directory (default: {DEFAULT_SOURCE_DIR}).",
+        help=f"Local bundle source directory for source=local (default: {DEFAULT_SOURCE_DIR}).",
     )
     sync_parser.add_argument(
         "--version",

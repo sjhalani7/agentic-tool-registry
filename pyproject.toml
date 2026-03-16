@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-tool-registry"
+version = "0.1.0"
+description = "CLI and metadata registry for agentic tool discovery"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "jsonschema>=4.0.0",
+]
+
+[project.scripts]
+atr = "src.atr_cli:main"
+agentic-tool-registry = "src.atr_cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src", "src.*"]
