@@ -8,7 +8,7 @@ Without limiting the foregoing, maintainers and contributors disclaim any warran
 - legality, regulatory compliance, export compliance, privacy compliance, or non-infringement of any listed tool or its use
 - continued availability, pricing accuracy, authentication requirements, or third-party behavior
 
-You are solely responsible for independently evaluating every listed tool, every bundle, and every use case before use. That includes technical review, security review, legal review, privacy review, contract review, and compliance review where relevant.
+You are solely responsible for independently evaluating every listed tool, every bundle, and every use case before use. That includes technical review, security review, legal review, privacy review, contract review, compliance review, or any other external reviews where relevant.
 
 If you do not want to assume those risks, do not use, rely on, sync, redistribute, or build on this repository, the CLI, any bundle, or any listed tool.
 
@@ -17,7 +17,7 @@ If you do not want to assume those risks, do not use, rely on, sync, redistribut
 Terms such as `verified`, `stable`, `official`, `reviewed`, or similar labels have a limited internal meaning in this project. They indicate only that the repository's moderation process recorded a limited review of publisher identity, documentation, or metadata.
 
 Those labels do not mean, and must not be interpreted as meaning, that any tool is:
-- safe, secure, lawful, compliant, accurate, available, or appropriate for any use
+- safe, secure, compliant, accurate, available, or appropriate for any use
 - endorsed by the maintainers or contributors
 - affiliated with, sponsored by, or approved by any third party except as expressly stated by that third party
 - fit for production, fit for payment flows, or fit for handling sensitive data
