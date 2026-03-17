@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,6 +21,30 @@ DEFAULT_CACHE_DIR = Path.home() / ".cache" / "agentic-tool-registry"
 DEFAULT_REMOTE_BASE_URL = "https://sjhalani7.github.io/agentic-tool-registry"
 SUPPORTED_CHANNELS = {"stable", "community", "experimental"}
 SUPPORTED_SOURCE_MODES = {"remote", "local"}
+SAFE_PATH_COMPONENT_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,255}$")
+
+
+def validate_path_component(value: str, label: str) -> str:
+    """Require one safe filename/path component with no traversal markers."""
+    if not isinstance(value, str) or not value:
+        raise SystemExit(f"sync failed: {label} must be a non-empty string")
+    if value in {".", ".."} or not SAFE_PATH_COMPONENT_RE.fullmatch(value):
+        raise SystemExit(
+            f"sync failed: {label} must be a simple path component using only letters, digits, dot, underscore, and hyphen"
+        )
+    return value
+
+
+def resolve_path_within_root(root: Path, name: str, label: str) -> Path:
+    """Join one validated component beneath root and reject path escape."""
+    safe_name = validate_path_component(name, label)
+    resolved_root = root.resolve()
+    resolved_path = (resolved_root / safe_name).resolve()
+    try:
+        resolved_path.relative_to(resolved_root)
+    except ValueError as exc:
+        raise SystemExit(f"sync failed: {label} escapes {resolved_root}") from exc
+    return resolved_path
 
 
 def discover_versions(source_dir: Path) -> list[str]:
@@ -44,6 +69,7 @@ def resolve_local_version(source_dir: Path, requested_version: str | None) -> st
     """Resolve an explicit or latest bundle version from a local source directory."""
     versions = discover_versions(source_dir)
     if requested_version:
+        validate_path_component(requested_version, "requested bundle version")
         if requested_version not in versions:
             raise SystemExit(
                 f"sync failed: requested version '{requested_version}' not found in {source_dir}"
@@ -114,11 +140,11 @@ def extract_remote_versions(index: dict[str, Any]) -> list[str]:
     if isinstance(raw_versions, list):
         for entry in raw_versions:
             if isinstance(entry, str):
-                versions.append(entry)
+                versions.append(validate_path_component(entry, "remote bundle version"))
             elif isinstance(entry, dict):
                 version = entry.get("version")
                 if isinstance(version, str) and version:
-                    versions.append(version)
+                    versions.append(validate_path_component(version, "remote bundle version"))
 
     return sorted(set(versions))
 
@@ -131,6 +157,7 @@ def resolve_remote_version(remote_base_url: str, requested_version: str | None) 
         raise SystemExit("sync failed: remote index has no versions")
 
     if requested_version:
+        validate_path_component(requested_version, "requested bundle version")
         if requested_version not in versions:
             raise SystemExit(
                 f"sync failed: requested version '{requested_version}' not found in remote index"
@@ -139,15 +166,16 @@ def resolve_remote_version(remote_base_url: str, requested_version: str | None) 
 
     latest = index.get("latest")
     if isinstance(latest, str) and latest in versions:
-        return latest
+        return validate_path_component(latest, "remote latest bundle version")
     return versions[-1]
 
 
 def download_remote_bundle(remote_base_url: str, version: str, temp_dir: Path) -> Path:
     """Download manifest and listed artifacts for a remote bundle version."""
-    bundle_dir = temp_dir / version
+    safe_version = validate_path_component(version, "bundle version")
+    bundle_dir = resolve_path_within_root(temp_dir, safe_version, "bundle version")
     manifest_url = f"{remote_base_url}/{version}/manifest.json"
-    manifest_path = bundle_dir / "manifest.json"
+    manifest_path = resolve_path_within_root(bundle_dir, "manifest.json", "bundle manifest")
     download_remote_file(manifest_url, manifest_path)
 
     manifest = load_json(manifest_path)
@@ -161,8 +189,10 @@ def download_remote_bundle(remote_base_url: str, version: str, temp_dir: Path) -
     for artifact_name in sorted(artifacts.keys()):
         if not isinstance(artifact_name, str) or not artifact_name:
             raise SystemExit(f"sync failed: manifest contains invalid artifact name ({manifest_url})")
-        artifact_url = f"{remote_base_url}/{version}/{artifact_name}"
-        download_remote_file(artifact_url, bundle_dir / artifact_name)
+        safe_artifact_name = validate_path_component(artifact_name, "manifest artifact name")
+        artifact_url = f"{remote_base_url}/{safe_version}/{safe_artifact_name}"
+        artifact_path = resolve_path_within_root(bundle_dir, safe_artifact_name, "manifest artifact")
+        download_remote_file(artifact_url, artifact_path)
 
     return bundle_dir
 
@@ -179,7 +209,7 @@ def enforce_channel_risk(channel: str, allow_risky_channel: bool) -> None:
 
 def verify_bundle(bundle_dir: Path, expected_channel: str) -> tuple[dict[str, Any], list[str]]:
     """Verify bundle manifest + checksums and return manifest with required artifact names."""
-    manifest_path = bundle_dir / "manifest.json"
+    manifest_path = resolve_path_within_root(bundle_dir, "manifest.json", "bundle manifest")
     if not manifest_path.exists():
         raise SystemExit(f"sync failed: missing manifest: {manifest_path}")
 
@@ -199,7 +229,10 @@ def verify_bundle(bundle_dir: Path, expected_channel: str) -> tuple[dict[str, An
 
     required_files: list[str] = []
     for artifact_name, metadata in sorted(artifacts.items()):
-        artifact_path = bundle_dir / artifact_name
+        if not isinstance(artifact_name, str) or not artifact_name:
+            raise SystemExit("sync failed: manifest contains invalid artifact name")
+        safe_artifact_name = validate_path_component(artifact_name, "manifest artifact name")
+        artifact_path = resolve_path_within_root(bundle_dir, safe_artifact_name, "manifest artifact")
         if not artifact_path.exists():
             raise SystemExit(f"sync failed: missing artifact file: {artifact_path}")
         if not isinstance(metadata, dict):
@@ -216,7 +249,7 @@ def verify_bundle(bundle_dir: Path, expected_channel: str) -> tuple[dict[str, An
                 f"sync failed: checksum mismatch for '{artifact_name}' "
                 f"(expected {expected_sha}, got {actual_sha})"
             )
-        required_files.append(artifact_name)
+        required_files.append(safe_artifact_name)
 
     required_files.append("manifest.json")
     return manifest, required_files
@@ -225,8 +258,8 @@ def verify_bundle(bundle_dir: Path, expected_channel: str) -> tuple[dict[str, An
 def copy_files(src_dir: Path, dest_dir: Path, names: list[str]) -> None:
     """Copy selected files from src_dir to dest_dir."""
     for name in names:
-        source = src_dir / name
-        target = dest_dir / name
+        source = resolve_path_within_root(src_dir, name, "bundle artifact")
+        target = resolve_path_within_root(dest_dir, name, "cache artifact")
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
 
@@ -239,11 +272,17 @@ def cache_snapshot(
 ) -> tuple[Path, bool]:
     """Copy bundle files into cache snapshot storage and return snapshot path + created flag."""
     snapshots_dir = cache_dir / "snapshots"
-    snapshot_dir = snapshots_dir / version
+    safe_version = validate_path_component(version, "bundle version")
+    snapshot_dir = resolve_path_within_root(snapshots_dir, safe_version, "snapshot directory")
     if snapshot_dir.exists():
         return snapshot_dir, False
 
-    temp_dir = cache_dir / "tmp" / f"{version}-{os.getpid()}"
+    temp_root = cache_dir / "tmp"
+    temp_dir = resolve_path_within_root(
+        temp_root,
+        f"{safe_version}-{os.getpid()}",
+        "temporary snapshot directory",
+    )
     temp_dir.mkdir(parents=True, exist_ok=False)
     copy_files(bundle_dir, temp_dir, artifact_names)
 
@@ -293,12 +332,16 @@ def run_sync(args: argparse.Namespace) -> int:
         if source_mode == "local":
             source_dir = Path(args.source_dir).expanduser().resolve()
             version = resolve_local_version(source_dir, args.version)
-            bundle_dir = source_dir / version
+            bundle_dir = resolve_path_within_root(source_dir, version, "bundle version")
             source_ref = str(source_dir)
         else:
             remote_base_url = normalize_remote_base_url(args.remote_base_url)
             version = resolve_remote_version(remote_base_url, args.version)
-            remote_temp_root = cache_dir / "tmp" / f"remote-{version}-{os.getpid()}"
+            remote_temp_root = resolve_path_within_root(
+                cache_dir / "tmp",
+                f"remote-{version}-{os.getpid()}",
+                "remote temporary bundle directory",
+            )
             bundle_dir = download_remote_bundle(remote_base_url, version, remote_temp_root)
             source_ref = remote_base_url
 
