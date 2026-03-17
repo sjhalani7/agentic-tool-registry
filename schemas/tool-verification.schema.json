@@ -20,7 +20,7 @@
     },
     "status": {
       "type": "string",
-      "description": "Verification status for merged registry state.",
+      "description": "Repository moderation status for merged registry state. Indicates limited internal review only, not safety, legality, security, accuracy, suitability, or endorsement.",
       "enum": ["verified", "revoked"]
     },
     "reviewed_by": {

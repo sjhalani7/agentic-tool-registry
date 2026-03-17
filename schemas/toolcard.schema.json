@@ -43,7 +43,7 @@
         },
         "verified": {
           "type": "boolean",
-          "description": "True if the registry has verified publisher ownership."
+          "description": "True if the registry completed a limited publisher-identity/manual metadata review. Not a guarantee of safety, legality, security, accuracy, suitability, or endorsement."
         }
       }
     },

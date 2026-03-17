@@ -1,7 +1,7 @@
 {
   "channel": "stable",
   "version": "2026-03-08",
-  "description": "Production-vetted tools for default agent usage.",
+  "description": "Manually reviewed tool metadata intended for default discovery, without any guarantee of safety, legality, accuracy, availability, or fitness.",
   "tools": [
     "google/calendar-api",
     "notion/public-api",
