@@ -1,88 +1,193 @@
 # Agentic Tool Registry
 
-Registry of production-reviewed tool metadata for agent discovery and invocation.
+CLI and metadata registry for agent tool discovery.
 
-This repo stores:
-- `ToolCard` (compact discovery metadata)
-- `ToolSpec` (how to call the tool)
-- `verification` record (moderator legitimacy decision)
-- channel manifests and versioned bundle artifacts
+## What It Is
 
-## Critical Rules
+Agentic Tool Registry is a local-first CLI plus a curated metadata registry for tools that coding agents may need to discover and use. Instead of making an agent read full product docs up front, the registry gives it a small discovery layer first and then a more detailed invocation layer only when a tool is selected. (Think how agents use skills: they have a header that gives them enough information to invoke a skill, and then they call the relevant information)
 
-1. No direct pushes to `main`.
-2. Every tool directory must contain all three files:
-   - `toolcard.json`
-   - `toolspec.json`
-   - `verification.json`
-3. Merged/published tools must satisfy verification policy:
-   - `toolcard.publisher.verified = true`
-   - `verification.status = "verified"`
-4. Channel manifests can reference only valid, verified tool IDs.
-5. CI pass is required, but moderator review is still required.
+In practice, this helps with a few things:
+- faster tool discovery
+- less context pollution
+- repeatable local caching of registry snapshots
+- stricter validation around what gets published
+- a simple way to inspect how a tool should be called
 
-## Repository Layout
+The registry stores:
+- `ToolCard` discovery metadata
+- `ToolSpec` invocation details
+- per-tool `verification` records
+- channel manifests
+- versioned bundle artifacts under `dist/`
+
+Why it is needed:
+- agents need a compact shortlist before they need a full spec
+- maintainers need a reviewable, PR-based source of truth
+- users need a simple CLI for syncing, searching, and inspecting tools locally
+
+## Install
+
+Install the CLI with `pipx`:
+
+```bash
+pipx install git+https://github.com/sjhalani7/agentic-tool-registry.git
+```
+
+For local development from this repo:
+
+```bash
+python3 -m pip install -e .
+```
+
+Supported binaries:
+- `atr`
+- `agentic-tool-registry`
+
+## Use With AI Agents
+
+This repo also includes a reusable skill at:
 
 ```text
-schemas/
-  toolcard.schema.json
-  toolspec.schema.json
-  tool-verification.schema.json
+skills/tool-search/
+```
 
+If your agent supports local file-based skills, download this repo and copy that folder into the agent's skills directory.
+
+To install it:
+
+1. Download or clone this repo.
+2. Copy the entire `skills/tool-search` folder into that agent's local skills directory.
+3. Keep the folder name as `tool-search`.
+4. Make sure `atr` is installed and available on `PATH`.
+5. Start a new agent session so it reloads local skills.
+
+Examples:
+
+```text
+~/.codex/skills/tool-search
+~/.claude/skills/tool-search
+~/.<agent>/skills/tool-search
+```
+
+Example copy commands after cloning this repo:
+
+```bash
+cp -R ./skills/tool-search ~/.codex/skills/tool-search
+cp -R ./skills/tool-search ~/.claude/skills/tool-search
+```
+
+The copied folder should contain:
+
+```text
+tool-search/
+  SKILL.md
+```
+
+Once installed, the agent can use the skill to:
+- check whether `atr` is available
+- run `atr search` first to shortlist tools
+- run `atr show <tool-id>` to inspect a ToolCard
+- run `atr resolve <tool-id>` only for the selected candidate
+- run `atr init-tool --interactive` if no suitable tool exists and a new entry should be scaffolded
+
+## Use The CLI
+
+### 1. Sync a registry snapshot
+
+Fetch the latest published snapshot into your local cache:
+
+```bash
+atr sync
+```
+
+Useful variants:
+
+```bash
+atr sync --version <bundle-version>
+atr sync --source remote --remote-base-url <https-registry-url>
+atr sync --source local --source-dir ./dist
+atr sync --channel community --allow-risky-channel
+atr sync --cache-dir ~/.cache/agentic-tool-registry
+```
+
+What it does:
+- downloads or copies a bundle snapshot
+- verifies artifact checksums from `manifest.json`
+- stores the snapshot under your cache directory
+- updates the active cache state used by `search`, `show`, and `resolve`
+
+Checksum verification confirms artifact integrity relative to the selected manifest. It does not by itself guarantee trustworthiness, safety, legality, suitability, or endorsement.
+
+### 2. List available tools
+
+```bash
+atr search
+```
+
+Output is JSONL with exactly:
+- `id`
+- `name`
+- `description`
+
+### 3. Inspect one ToolCard
+
+```bash
+atr show slack/web-api
+```
+
+This prints the full cached `ToolCard` as minified JSON.
+
+### 4. Inspect one ToolSpec
+
+```bash
+atr resolve slack/web-api
+```
+
+This prints the full cached `ToolSpec` as minified JSON.
+
+## Common Workflows
+
+### Use the published registry
+
+```bash
+atr sync
+atr search
+atr show <tool-id>
+atr resolve <tool-id>
+```
+
+### Test against a local bundle
+
+Build a bundle from the current repo and sync from `dist/`:
+
+```bash
+python3 -m src.commands.build_registry_bundle
+atr sync --source local --source-dir ./dist
+atr search
+```
+
+### Add a new tool
+
+Scaffold a new tool entry:
+
+```bash
+atr init-tool --interactive
+```
+
+This creates:
+
+```text
 tools/<publisher>/<tool>/
   toolcard.json
   toolspec.json
   verification.json
-
-channels/
-  index.json
-  stable.json
-  community.json
-  experimental.json
-
-dist/<bundle-version>/
-  manifest.json
-  toolcards.bundle.jsonl
-  toolspecs.bundle.jsonl
-  verifications.bundle.jsonl
-dist/index.json
 ```
 
-## Submission Workflow
+`init-tool` creates an intake scaffold only. Moderator review is still required before merge.
 
-### Contributor Flow (requesting/adding a new tool)
+## Validate Changes
 
-1. Scaffold files:
-
-```bash
-./bin/atr init-tool --interactive
-```
-
-2. Fill prompts for tool metadata and call details.
-
-3. Review generated files under:
-- `tools/<publisher>/<tool>/toolcard.json`
-- `tools/<publisher>/<tool>/toolspec.json`
-- `tools/<publisher>/<tool>/verification.json`
-
-4. Open a PR.
-
-Notes:
-- `init-tool` intentionally does **not** ask moderator-only verification questions.
-- It generates a pending verification record for PR intake.
-
-### Moderator Flow (approval and merge)
-
-Before merge, moderator must complete legitimacy review and update submission state:
-- `toolcard.publisher.verified` -> `true`
-- `verification.status` -> `"verified"`
-- `verification.reviewed_by` -> moderator identity
-- `verification.reviewed_at` -> UTC ISO8601 timestamp
-- `verification.evidence.*` -> complete evidence links/notes
-
-Then ensure CI passes and approve merge.
-
-## Local Validation (before PR)
+Run these before opening a PR:
 
 ```bash
 python3 -m src.commands.validate_toolcards
@@ -90,140 +195,43 @@ python3 -m src.commands.check_links --offline
 python3 -m py_compile src/atr_cli.py src/commands/*.py src/utils/*.py
 ```
 
-## CI Validation
-
-Workflow: `.github/workflows/validate-registry.yml`
-
-Runs on PR updates and pushes to `main`.
-
-CI gates:
-- `python3 -m src.commands.validate_toolcards`
-- `python3 -m src.commands.check_links --timeout 12`
-- `python3 -m py_compile src/atr_cli.py src/commands/*.py src/utils/*.py`
-
-## Build Registry Bundle
-
-Build a versioned stable snapshot:
+If your change affects channels or release bundles, also run:
 
 ```bash
 python3 -m src.commands.build_registry_bundle
 ```
 
-Bundler behavior:
-- hard-fails if validator fails
-- bundles `stable` channel only
-- includes verified tools only
-- writes versioned artifacts to `dist/<timestamp>-<gitsha>/`
-- updates `dist/index.json` with available versions and `latest`
+## Publish Bundles
 
-For remote sync, `dist/` must be published at a stable HTTPS URL.
-
-### Automated GitHub Bundle Build
-
-Workflow: `.github/workflows/build-registry-bundle.yml`
-
-Triggers:
-- manual run only (`workflow_dispatch`)
-
-Behavior:
-- runs registry validation
-- builds a fresh bundle (`python3 -m src.commands.build_registry_bundle`)
-- uploads `dist/` as a GitHub Actions artifact (`registry-dist-<sha>`)
-
-### Publish Dist to GitHub Pages
-
-Workflow: `.github/workflows/publish-registry-pages.yml`
-
-Triggers:
-- manual run only (`workflow_dispatch`)
-
-Behavior:
-- runs registry validation
-- builds a fresh bundle
-- deploys `dist/` to GitHub Pages
-
-Remote base URL for `atr sync` default:
-- `https://sjhalani7.github.io/agentic-tool-registry`
-
-## CLI Commands
-
-Supported binary names:
-- `atr`
-- `agentic-tool-registry`
-
-Install with `pipx`:
+Build a versioned bundle locally:
 
 ```bash
-pipx install git+https://github.com/sjhalani7/agentic-tool-registry.git
+python3 -m src.commands.build_registry_bundle
 ```
 
-### `sync`
+GitHub workflows:
+- `.github/workflows/validate-registry.yml`
+- `.github/workflows/build-registry-bundle.yml`
+- `.github/workflows/publish-registry-pages.yml`
 
-```bash
-./bin/atr sync
-./bin/atr sync --source remote --remote-base-url <https-registry-url> --version <bundle-version>
-./bin/atr sync --source local --source-dir ./dist
-./bin/atr sync --version <bundle-version>
-./bin/atr sync --channel community --allow-risky-channel
-./bin/atr sync --cache-dir ~/.cache/agentic-tool-registry
-```
+## Future Work
 
-Behavior:
-- defaults to remote source:
-  - `https://sjhalani7.github.io/agentic-tool-registry`
-- supports local override with `--source local --source-dir ./dist`
-- defaults to latest bundle version from remote `index.json` (or local version directories)
-- verifies artifact checksums from `manifest.json`
-- caches snapshot under `~/.cache/agentic-tool-registry/snapshots/<version>/`
-- writes active state to `~/.cache/agentic-tool-registry/current.json`
-- after sync, run `./bin/atr search` to list available tools
+This is still a small sample of tools, and we want to grow the registry substantially over time. If you want to help expand it, please follow the contribution guide, open PRs, file issues, send requests, and star the repo.
 
-### `search`
+Right now, `atr search` returns all tools at once. That works for the current size of the registry, but a better approach is grouping and browsing by category. We plan to add that once the registry has a larger set of ingested tools.
 
-```bash
-./bin/atr search
-```
+## Contributing
 
-Outputs JSONL records with exactly:
-- `id`
-- `name`
-- `description`
-
-### `show`
-
-```bash
-./bin/atr show <tool-id>
-```
-
-Behavior:
-- case-insensitive tool ID match
-- prints full ToolCard as minified JSON
-- key order starts with `id`, `name`, `description`
-
-### `resolve`
-
-```bash
-./bin/atr resolve <tool-id>
-```
-
-Behavior:
-- case-insensitive tool ID match
-- resolves against cached `toolspecs` artifact
-- prints full ToolSpec as minified JSON
-- key order starts with `tool_id`, `type`, `summary`, `auth`, `external_docs`
-
-### `init-tool`
-
-```bash
-./bin/atr init-tool --interactive
-```
-
-Behavior:
-- creates required manifest files in `tools/<publisher>/<tool>/`
-- enforces slug/URL/basic schema-shape constraints during prompting
-- asks payment requirement first; for unpaid tools it auto-fills `pricing=\"Free\"`, `currency=\"USD\"`, and `payment.purl_supported=false`
-- does not expose moderator verification workflow in prompts
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution and moderation workflow.
 
 ## Legal / Risk Notice
 
-This repository is provided **as is**. Listed tools may be inaccurate, unsafe, or malicious. Use at your own risk. Maintainers and contributors are not liable for losses or incidents resulting from tool usage.
+This repository, the CLI, all bundles, and all listed tools are provided on an `AS IS` and `WITH ALL FAULTS` basis, without warranties or guarantees of any kind, to the maximum extent permitted by applicable law.
+
+`verified`, `stable`, `official`, `reviewed`, and similar labels have a limited repository-specific meaning. They do not mean safe, secure, lawful, accurate, available, endorsed, or fit for any purpose.
+
+You are solely responsible for independently evaluating each tool, bundle, and use case before relying on it, including security, privacy, contract, and legal/compliance review where relevant.
+
+If you do not want to assume those risks, do not use, rely on, sync, redistribute, or build on this repository, the CLI, any bundle, or any listed tool.
+
+See [LEGAL.md](LEGAL.md) for the full notice, including no-liability, no-advice, trademark, and license-status language.
