@@ -14,7 +14,7 @@
     "change-tracking"
   ],
   "description": "Google Drive REST API v3 for searching files, uploading and downloading content, managing permissions, and tracking changes across My Drive and shared drives.",
-  "pricing": "Drive API is quota-limited shared infrastructure. Docs list 12,000 queries per 60 seconds (project) and 12,000 per 60 seconds per user, with no daily request cap if per-minute limits are respected: https://developers.google.com/workspace/drive/api/guides/limits",
+  "pricing": "Quota-limited shared infrastructure: 12,000 queries per 60 seconds per project and per user. Limits docs: https://developers.google.com/workspace/drive/api/guides/limits",
   "currency": "USD",
   "payment": {
     "is_paid": false,
