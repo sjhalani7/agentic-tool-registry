@@ -9,8 +9,7 @@
       "https://api.nasa.gov/assets/html/authentication.html",
       "https://github.com/nasa/api-docs",
       "https://github.com/nasa/api-docs/blob/gh-pages/assets/json/apis.json",
-      "https://epic.gsfc.nasa.gov/about/api",
-      "https://api.nasa.gov/planetary/apod"
+      "https://epic.gsfc.nasa.gov/about/api"
     ],
     "notes": "Manual review confirmed NASA first-party API portal ownership, DEMO_KEY/personal api_key guidance, and documented representative endpoint families (APOD, Mars Rover Photos, EPIC) in official NASA docs/catalog sources."
   }
