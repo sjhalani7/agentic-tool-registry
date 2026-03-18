@@ -1,0 +1,22 @@
+{
+  "id": "nasa/open-apis",
+  "name": "NASA Open APIs",
+  "publisher": {
+    "name": "NASA",
+    "url": "https://api.nasa.gov/",
+    "verified": true
+  },
+  "capabilities": [
+    "astronomy-imagery",
+    "mars-rover-photos",
+    "earth-imagery-metadata",
+    "space-data"
+  ],
+  "description": "NASA public API gateway for APOD, Mars Rover Photos, EPIC, and other documented datasets exposed via api.nasa.gov with API key-based access.",
+  "pricing": "Public APIs are generally free to explore with DEMO_KEY; higher-volume production use should use a personal api.nasa.gov key and follow documented rate limits.",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

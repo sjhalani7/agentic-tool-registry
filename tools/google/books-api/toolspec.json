@@ -1,0 +1,124 @@
+{
+  "tool_id": "google/books-api",
+  "type": "http",
+  "summary": "Google Books API v1 at www.googleapis.com/books/v1 supports public volume search/metadata workflows and OAuth-protected My Library bookshelf operations.",
+  "auth": {
+    "type": "oauth",
+    "instructions": "Public requests without an OAuth 2.0 token must send an API key via the key query parameter. For user bookshelf operations under /mylibrary/*, obtain user OAuth consent and send Authorization: Bearer <token> with scope https://www.googleapis.com/auth/books."
+  },
+  "external_docs": [
+    {
+      "description": "Google Books API overview",
+      "url": "https://developers.google.com/books/docs/overview"
+    },
+    {
+      "description": "Using the Google Books API",
+      "url": "https://developers.google.com/books/docs/v1/using"
+    },
+    {
+      "description": "Google Books API v1 reference",
+      "url": "https://developers.google.com/books/docs/v1/reference"
+    },
+    {
+      "description": "My Library addVolume method",
+      "url": "https://developers.google.com/books/docs/v1/reference/mylibrary/bookshelves/addVolume"
+    }
+  ],
+  "http": {
+    "base_url": "https://www.googleapis.com/books/v1",
+    "headers": [
+      {
+        "name": "Authorization",
+        "value": "Bearer <ACCESS_TOKEN>"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "search-volumes",
+        "method": "GET",
+        "path": "/volumes",
+        "description": "Searches public Google Books volumes. Requires q; if no OAuth token is provided, include API key in key query parameter.",
+        "query_params": [
+          "q",
+          "maxResults",
+          "startIndex",
+          "orderBy",
+          "printType",
+          "projection",
+          "langRestrict",
+          "key"
+        ],
+        "example": {
+          "q": "isbn:9780140328721",
+          "maxResults": "1",
+          "projection": "lite",
+          "key": "<API_KEY>"
+        }
+      },
+      {
+        "name": "get-volume",
+        "method": "GET",
+        "path": "/volumes/{volumeId}",
+        "description": "Retrieves metadata for a specific volume ID.",
+        "query_params": [
+          "projection",
+          "country",
+          "key"
+        ],
+        "example": {
+          "volumeId": "zyTCAlFPjgYC",
+          "projection": "full",
+          "key": "<API_KEY>"
+        }
+      },
+      {
+        "name": "list-my-bookshelves",
+        "method": "GET",
+        "path": "/mylibrary/bookshelves",
+        "description": "Lists bookshelves in the authenticated user's My Library account (OAuth required)."
+      },
+      {
+        "name": "list-my-bookshelf-volumes",
+        "method": "GET",
+        "path": "/mylibrary/bookshelves/{shelf}/volumes",
+        "description": "Lists volumes in an authenticated user's bookshelf by shelf ID (OAuth required).",
+        "query_params": [
+          "maxResults",
+          "startIndex",
+          "showPreorders"
+        ],
+        "example": {
+          "shelf": "0",
+          "maxResults": "10",
+          "startIndex": "0"
+        }
+      },
+      {
+        "name": "add-volume-to-bookshelf",
+        "method": "POST",
+        "path": "/mylibrary/bookshelves/{shelf}/addVolume",
+        "description": "Adds a volume to an authenticated user's bookshelf; requires https://www.googleapis.com/auth/books scope.",
+        "query_params": [
+          "volumeId"
+        ],
+        "example": {
+          "shelf": "0",
+          "volumeId": "zyTCAlFPjgYC"
+        }
+      },
+      {
+        "name": "remove-volume-from-bookshelf",
+        "method": "POST",
+        "path": "/mylibrary/bookshelves/{shelf}/removeVolume",
+        "description": "Removes a volume from an authenticated user's bookshelf.",
+        "query_params": [
+          "volumeId"
+        ],
+        "example": {
+          "shelf": "0",
+          "volumeId": "zyTCAlFPjgYC"
+        }
+      }
+    ]
+  }
+}

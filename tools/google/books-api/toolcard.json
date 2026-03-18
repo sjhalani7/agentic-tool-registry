@@ -1,0 +1,22 @@
+{
+  "id": "google/books-api",
+  "name": "Google Books API",
+  "publisher": {
+    "name": "Google",
+    "url": "https://developers.google.com/books/docs/overview",
+    "verified": true
+  },
+  "capabilities": [
+    "book-search",
+    "volume-metadata",
+    "bookshelves",
+    "mylibrary"
+  ],
+  "description": "Google Books API v1 for searching volumes, retrieving volume metadata, and managing authenticated My Library bookshelves.",
+  "pricing": "Books API docs do not publish per-request pricing; requests use project quota/reporting and are governed by Google APIs Terms. See https://developers.google.com/books/docs/v1/using.",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

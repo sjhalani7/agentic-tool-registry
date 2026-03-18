@@ -1,0 +1,92 @@
+{
+  "tool_id": "arxiv/api",
+  "type": "http",
+  "summary": "arXiv's API exposes a single query endpoint for searching and retrieving article metadata in Atom feeds using search_query/id_list filters, pagination, and sorting.",
+  "auth": {
+    "type": "none",
+    "instructions": "No API key or OAuth token is required. Per arXiv API guidance, identify your client with a descriptive User-Agent (including contact info) and follow rate limits (for example, no more than one request every three seconds)."
+  },
+  "external_docs": [
+    {
+      "description": "arXiv API User Manual",
+      "url": "https://info.arxiv.org/help/api/user-manual.html"
+    },
+    {
+      "description": "arXiv API Basics",
+      "url": "https://info.arxiv.org/help/api/basics.html"
+    },
+    {
+      "description": "arXiv API Terms of Use",
+      "url": "https://info.arxiv.org/help/api/tou.html"
+    }
+  ],
+  "http": {
+    "base_url": "https://export.arxiv.org/api",
+    "headers": [
+      {
+        "name": "User-Agent",
+        "value": "my-arxiv-client/1.0 (mailto:your-email@example.com)"
+      },
+      {
+        "name": "Accept",
+        "value": "application/atom+xml"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "search-query",
+        "method": "GET",
+        "path": "/query",
+        "description": "Searches arXiv metadata using fielded boolean query syntax with paging and sorting controls.",
+        "query_params": [
+          "search_query",
+          "start",
+          "max_results",
+          "sortBy",
+          "sortOrder"
+        ],
+        "example": {
+          "search_query": "cat:cs.LG+AND+all:transformer",
+          "start": "0",
+          "max_results": "25",
+          "sortBy": "submittedDate",
+          "sortOrder": "descending"
+        }
+      },
+      {
+        "name": "lookup-by-id-list",
+        "method": "GET",
+        "path": "/query",
+        "description": "Returns records for specific arXiv identifiers via comma-delimited id_list.",
+        "query_params": [
+          "id_list",
+          "start",
+          "max_results"
+        ],
+        "example": {
+          "id_list": "1605.08386,2101.00001",
+          "start": "0",
+          "max_results": "2"
+        }
+      },
+      {
+        "name": "combined-query-and-id-filter",
+        "method": "GET",
+        "path": "/query",
+        "description": "Applies both search_query and id_list in one call, following arXiv's search_query/id_list combination behavior.",
+        "query_params": [
+          "search_query",
+          "id_list",
+          "start",
+          "max_results"
+        ],
+        "example": {
+          "search_query": "au:goodfellow",
+          "id_list": "1406.2661,1512.03385",
+          "start": "0",
+          "max_results": "2"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "tool_id": "open-library/api",
+  "type": "http",
+  "summary": "Open Library provides public HTTP APIs for catalog search, work/edition/author metadata retrieval, legacy bibkey lookups, and cover image fetching from Open Library records.",
+  "auth": {
+    "type": "none",
+    "instructions": "No API key or OAuth token is required for the documented read APIs. Open Library asks clients to send a descriptive User-Agent with contact information and follow published usage guidance, including rate limits (100 requests per 5 minutes by default, up to 300 per 5 minutes for identified clients)."
+  },
+  "external_docs": [
+    {
+      "description": "Open Library developers API overview",
+      "url": "https://openlibrary.org/developers/api"
+    },
+    {
+      "description": "Open Library Search API docs",
+      "url": "https://openlibrary.org/dev/docs/api/search"
+    },
+    {
+      "description": "Open Library Books API docs",
+      "url": "https://openlibrary.org/dev/docs/api/books"
+    },
+    {
+      "description": "Open Library Covers API docs",
+      "url": "https://openlibrary.org/dev/docs/api/covers"
+    },
+    {
+      "description": "Open Library developer portal",
+      "url": "https://openlibrary.org/developers"
+    }
+  ],
+  "http": {
+    "base_url": "https://openlibrary.org",
+    "headers": [
+      {
+        "name": "User-Agent",
+        "value": "your-openlibrary-client/1.0 (mailto:your-email@example.com)"
+      },
+      {
+        "name": "Accept",
+        "value": "application/json"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "search-books",
+        "method": "GET",
+        "path": "/search.json",
+        "description": "Searches books and editions in Open Library's index.",
+        "query_params": [
+          "q",
+          "fields",
+          "limit",
+          "page",
+          "sort"
+        ],
+        "example": {
+          "q": "the lord of the rings",
+          "fields": "key,title,author_name,first_publish_year",
+          "limit": "5",
+          "page": "1"
+        }
+      },
+      {
+        "name": "get-work",
+        "method": "GET",
+        "path": "/works/{workId}.json",
+        "description": "Returns metadata for a work by Open Library work ID (OL...W)."
+      },
+      {
+        "name": "get-edition",
+        "method": "GET",
+        "path": "/books/{editionId}.json",
+        "description": "Returns metadata for an edition by Open Library edition ID (OL...M)."
+      },
+      {
+        "name": "get-author",
+        "method": "GET",
+        "path": "/authors/{authorId}.json",
+        "description": "Returns author metadata by Open Library author ID (OL...A)."
+      },
+      {
+        "name": "lookup-books-by-bibkey",
+        "method": "GET",
+        "path": "/api/books",
+        "description": "Legacy API for looking up one or more books by bibkeys such as ISBN, OCLC, LCCN, OLID.",
+        "query_params": [
+          "bibkeys",
+          "format",
+          "jscmd"
+        ],
+        "example": {
+          "bibkeys": "ISBN:0451526538,OLID:OL7353617M",
+          "format": "json",
+          "jscmd": "data"
+        }
+      },
+      {
+        "name": "get-cover-image",
+        "method": "GET",
+        "path": "/b/id/{coverId}-{size}.jpg",
+        "description": "Fetches a cover image by cover ID and size from the Covers API host (use this path against https://covers.openlibrary.org).",
+        "query_params": [
+          "default"
+        ],
+        "example": {
+          "coverId": "8231856",
+          "size": "L",
+          "default": "false"
+        }
+      }
+    ]
+  }
+}

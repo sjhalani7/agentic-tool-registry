@@ -1,0 +1,123 @@
+{
+  "tool_id": "weatherapi/weather-api",
+  "type": "http",
+  "summary": "WeatherAPI REST service for real-time weather, multi-day forecasts, historical lookups, alerts, astronomy, and location autocomplete using API-key authenticated HTTP requests.",
+  "auth": {
+    "type": "api_key",
+    "instructions": "Create an account at WeatherAPI.com to obtain an API key, then pass it as the required `key` query parameter on every request (for example: `?key=<YOUR_API_KEY>&q=London`). The docs state requests can be sent over HTTP or HTTPS."
+  },
+  "external_docs": [
+    {
+      "description": "WeatherAPI documentation",
+      "url": "https://www.weatherapi.com/docs/"
+    },
+    {
+      "description": "WeatherAPI API explorer",
+      "url": "https://www.weatherapi.com/api-explorer.aspx"
+    },
+    {
+      "description": "WeatherAPI pricing",
+      "url": "https://www.weatherapi.com/pricing.aspx"
+    }
+  ],
+  "http": {
+    "base_url": "https://api.weatherapi.com/v1",
+    "endpoints": [
+      {
+        "name": "get-current-weather",
+        "method": "GET",
+        "path": "/current.json",
+        "description": "Returns current weather data for a location query.",
+        "query_params": [
+          "key",
+          "q",
+          "aqi",
+          "lang"
+        ],
+        "example": {
+          "q": "San Francisco",
+          "aqi": "yes"
+        }
+      },
+      {
+        "name": "get-forecast",
+        "method": "GET",
+        "path": "/forecast.json",
+        "description": "Returns forecast weather; supports day count and optional alerts/air-quality data.",
+        "query_params": [
+          "key",
+          "q",
+          "days",
+          "alerts",
+          "aqi",
+          "lang"
+        ],
+        "example": {
+          "q": "10001",
+          "days": "3",
+          "alerts": "yes"
+        }
+      },
+      {
+        "name": "get-history",
+        "method": "GET",
+        "path": "/history.json",
+        "description": "Returns historical weather for a location and date.",
+        "query_params": [
+          "key",
+          "q",
+          "dt",
+          "end_dt",
+          "hour",
+          "lang"
+        ],
+        "example": {
+          "q": "London",
+          "dt": "2026-03-01"
+        }
+      },
+      {
+        "name": "get-alerts",
+        "method": "GET",
+        "path": "/alerts.json",
+        "description": "Returns active weather alerts/warnings for supported regions and the requested location.",
+        "query_params": [
+          "key",
+          "q",
+          "lang"
+        ],
+        "example": {
+          "q": "Houston"
+        }
+      },
+      {
+        "name": "search-locations",
+        "method": "GET",
+        "path": "/search.json",
+        "description": "Autocomplete/search endpoint for matching city, postal code, or other supported location queries.",
+        "query_params": [
+          "key",
+          "q"
+        ],
+        "example": {
+          "q": "San"
+        }
+      },
+      {
+        "name": "get-astronomy",
+        "method": "GET",
+        "path": "/astronomy.json",
+        "description": "Returns astronomy data (e.g., sunrise/sunset and moon phase) for a location and date.",
+        "query_params": [
+          "key",
+          "q",
+          "dt"
+        ],
+        "example": {
+          "q": "Paris",
+          "dt": "2026-03-17"
+        }
+      }
+    ]
+  }
+}

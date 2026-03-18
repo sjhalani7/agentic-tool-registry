@@ -1,0 +1,107 @@
+{
+  "tool_id": "nasa/open-apis",
+  "type": "http",
+  "summary": "NASA Open APIs are exposed through the api.nasa.gov gateway, with representative endpoints for APOD, Mars Rover Photos, and EPIC imagery metadata.",
+  "auth": {
+    "type": "api_key",
+    "instructions": "Use the api.nasa.gov API key model: include api_key in query parameters as either DEMO_KEY (limited demo usage) or a personal key generated from the NASA API portal for production workloads. Endpoint-specific query parameters remain required (for example sol, date, or thumbs)."
+  },
+  "external_docs": [
+    {
+      "description": "NASA Open APIs portal",
+      "url": "https://api.nasa.gov/"
+    },
+    {
+      "description": "Authentication and API key guidance",
+      "url": "https://api.nasa.gov/assets/html/authentication.html"
+    },
+    {
+      "description": "Official API catalog source used by api.nasa.gov",
+      "url": "https://github.com/nasa/api-docs/blob/gh-pages/assets/json/apis.json"
+    },
+    {
+      "description": "EPIC API docs",
+      "url": "https://epic.gsfc.nasa.gov/about/api"
+    }
+  ],
+  "http": {
+    "base_url": "https://api.nasa.gov",
+    "endpoints": [
+      {
+        "name": "get-apod",
+        "method": "GET",
+        "path": "/planetary/apod",
+        "description": "Astronomy Picture of the Day metadata and media URL; supports single-day or date-range retrieval.",
+        "query_params": [
+          "api_key",
+          "date",
+          "start_date",
+          "end_date",
+          "count",
+          "thumbs"
+        ],
+        "example": {
+          "api_key": "DEMO_KEY",
+          "date": "2026-03-17"
+        }
+      },
+      {
+        "name": "list-mars-rover-photos",
+        "method": "GET",
+        "path": "/mars-photos/api/v1/rovers/{rover}/photos",
+        "description": "Lists Mars Rover photos for a rover by Martian sol or Earth date, with optional camera filter.",
+        "query_params": [
+          "api_key",
+          "sol",
+          "earth_date",
+          "camera",
+          "page"
+        ],
+        "example": {
+          "rover": "curiosity",
+          "api_key": "DEMO_KEY",
+          "sol": "1000",
+          "camera": "fhaz"
+        }
+      },
+      {
+        "name": "get-mars-rover-manifest",
+        "method": "GET",
+        "path": "/mars-photos/api/v1/manifests/{rover}",
+        "description": "Returns mission manifest details (launch/landing date, max sol/date, and photo counts) for a rover.",
+        "query_params": [
+          "api_key"
+        ],
+        "example": {
+          "rover": "perseverance",
+          "api_key": "DEMO_KEY"
+        }
+      },
+      {
+        "name": "list-epic-natural-images",
+        "method": "GET",
+        "path": "/EPIC/api/natural/images",
+        "description": "Returns available EPIC natural-color image metadata for recent observations.",
+        "query_params": [
+          "api_key"
+        ],
+        "example": {
+          "api_key": "DEMO_KEY"
+        }
+      },
+      {
+        "name": "list-epic-natural-images-by-date",
+        "method": "GET",
+        "path": "/EPIC/api/natural/date/{YYYY-MM-DD}",
+        "description": "Returns EPIC natural-color image metadata for a specific UTC date.",
+        "query_params": [
+          "api_key"
+        ],
+        "example": {
+          "YYYY-MM-DD": "2026-03-01",
+          "api_key": "DEMO_KEY"
+        }
+      }
+    ]
+  }
+}

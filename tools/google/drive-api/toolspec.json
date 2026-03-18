@@ -1,0 +1,205 @@
+{
+  "tool_id": "google/drive-api",
+  "type": "http",
+  "summary": "Google Drive API v3 provides OAuth-secured REST endpoints for file/folder CRUD, permission sharing, uploads via the upload URI, and incremental sync using changes tokens.",
+  "auth": {
+    "type": "oauth",
+    "instructions": "Enable Google Drive API in Google Cloud, configure the OAuth consent screen and client credentials, then send Authorization: Bearer <token>. Request least-privilege scopes per workflow (for example https://www.googleapis.com/auth/drive.metadata.readonly, https://www.googleapis.com/auth/drive.file, or full https://www.googleapis.com/auth/drive)."
+  },
+  "external_docs": [
+    {
+      "description": "Google Drive developer hub",
+      "url": "https://developers.google.com/workspace/drive"
+    },
+    {
+      "description": "Drive API overview",
+      "url": "https://developers.google.com/workspace/drive/api/guides/about-sdk"
+    },
+    {
+      "description": "Drive API auth and scopes",
+      "url": "https://developers.google.com/workspace/drive/api/guides/api-specific-auth"
+    },
+    {
+      "description": "Drive API v3 reference",
+      "url": "https://developers.google.com/workspace/drive/api/reference/rest/v3"
+    },
+    {
+      "description": "Drive API usage limits",
+      "url": "https://developers.google.com/workspace/drive/api/guides/limits"
+    }
+  ],
+  "http": {
+    "base_url": "https://www.googleapis.com/drive/v3",
+    "headers": [
+      {
+        "name": "Authorization",
+        "value": "Bearer <ACCESS_TOKEN>"
+      },
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "list-files",
+        "method": "GET",
+        "path": "/files",
+        "description": "Lists files visible to the caller; supports query search syntax, projection fields, pagination, and shared drives flags.",
+        "query_params": [
+          "q",
+          "pageSize",
+          "pageToken",
+          "fields",
+          "orderBy",
+          "spaces",
+          "supportsAllDrives",
+          "includeItemsFromAllDrives"
+        ],
+        "example": {
+          "q": "mimeType='application/pdf' and trashed=false",
+          "pageSize": "50",
+          "fields": "nextPageToken,files(id,name,mimeType,modifiedTime)"
+        }
+      },
+      {
+        "name": "get-file-metadata",
+        "method": "GET",
+        "path": "/files/{fileId}",
+        "description": "Returns metadata for a file by ID; include supportsAllDrives when accessing shared drive items.",
+        "query_params": [
+          "fields",
+          "supportsAllDrives",
+          "acknowledgeAbuse"
+        ],
+        "example": {
+          "fileId": "1a2B3cDriveFileId",
+          "fields": "id,name,mimeType,size,owners,modifiedTime"
+        }
+      },
+      {
+        "name": "create-file-metadata",
+        "method": "POST",
+        "path": "/files",
+        "description": "Creates a file metadata resource. For content upload, files.create also supports the upload URI with /upload/drive/v3/files and uploadType.",
+        "query_params": [
+          "supportsAllDrives",
+          "keepRevisionForever"
+        ],
+        "body": {
+          "name": "string",
+          "mimeType": "string",
+          "parents": [
+            "folderId"
+          ]
+        },
+        "example": {
+          "name": "Q1-report",
+          "mimeType": "application/vnd.google-apps.document",
+          "parents": [
+            "folderId123"
+          ]
+        }
+      },
+      {
+        "name": "upload-file-content",
+        "method": "POST",
+        "path": "/files",
+        "description": "Uploads binary content using files.create with uploadType. Media and multipart uploads use https://www.googleapis.com/upload/drive/v3/files.",
+        "query_params": [
+          "uploadType",
+          "supportsAllDrives",
+          "keepRevisionForever"
+        ],
+        "example": {
+          "uploadType": "multipart"
+        }
+      },
+      {
+        "name": "update-file",
+        "method": "PATCH",
+        "path": "/files/{fileId}",
+        "description": "Partially updates file metadata and can move files by combining addParents and removeParents.",
+        "query_params": [
+          "addParents",
+          "removeParents",
+          "supportsAllDrives",
+          "uploadType",
+          "keepRevisionForever"
+        ],
+        "body": {
+          "name": "string",
+          "description": "string",
+          "starred": "boolean"
+        },
+        "example": {
+          "name": "Q1-report-final",
+          "starred": true
+        }
+      },
+      {
+        "name": "create-permission",
+        "method": "POST",
+        "path": "/files/{fileId}/permissions",
+        "description": "Creates a permission on a file or shared drive item to grant access to a user, group, domain, or anyone.",
+        "query_params": [
+          "sendNotificationEmail",
+          "supportsAllDrives",
+          "transferOwnership"
+        ],
+        "body": {
+          "type": "user",
+          "role": "reader",
+          "emailAddress": "user@example.com"
+        },
+        "example": {
+          "type": "user",
+          "role": "writer",
+          "emailAddress": "collaborator@example.com"
+        }
+      },
+      {
+        "name": "list-changes",
+        "method": "GET",
+        "path": "/changes",
+        "description": "Returns incremental changes since a start page token for sync workflows and change tracking.",
+        "query_params": [
+          "pageToken",
+          "pageSize",
+          "fields",
+          "spaces",
+          "restrictToMyDrive",
+          "supportsAllDrives",
+          "includeItemsFromAllDrives"
+        ],
+        "example": {
+          "pageToken": "123456",
+          "fields": "nextPageToken,newStartPageToken,changes(fileId,removed,time,file(id,name,mimeType))",
+          "spaces": "drive"
+        }
+      },
+      {
+        "name": "watch-changes",
+        "method": "POST",
+        "path": "/changes/watch",
+        "description": "Starts a webhook notification channel for Drive changes from a page token.",
+        "query_params": [
+          "pageToken",
+          "supportsAllDrives",
+          "includeItemsFromAllDrives"
+        ],
+        "body": {
+          "id": "channel-id",
+          "type": "web_hook",
+          "address": "https://example.com/drive/webhook"
+        },
+        "example": {
+          "pageToken": "123456",
+          "id": "drive-changes-channel-001",
+          "type": "web_hook",
+          "address": "https://example.com/drive/webhook"
+        }
+      }
+    ]
+  }
+}

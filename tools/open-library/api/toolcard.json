@@ -1,0 +1,23 @@
+{
+  "id": "open-library/api",
+  "name": "Open Library API",
+  "publisher": {
+    "name": "Open Library",
+    "url": "https://openlibrary.org/developers/api",
+    "verified": true
+  },
+  "capabilities": [
+    "book-search",
+    "book-metadata",
+    "author-lookup",
+    "edition-lookup",
+    "cover-images"
+  ],
+  "description": "Open Library's public APIs for searching books, retrieving work/edition metadata, and accessing cover images from Open Library catalog data.",
+  "pricing": "Free public API. Usage and rate-limit guidance are documented at https://openlibrary.org/developers/api.",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

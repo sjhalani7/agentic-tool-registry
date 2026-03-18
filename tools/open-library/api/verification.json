@@ -1,0 +1,16 @@
+{
+  "tool_id": "open-library/api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://openlibrary.org/developers/api",
+    "external_references": [
+      "https://openlibrary.org/developers",
+      "https://openlibrary.org/dev/docs/api/search",
+      "https://openlibrary.org/dev/docs/api/books",
+      "https://openlibrary.org/dev/docs/api/covers"
+    ],
+    "notes": "Manual review confirmed first-party Open Library API docs, unauthenticated read access model, usage guidance around client identification/rate limits, and representative endpoint patterns for search, books metadata, and covers."
+  }
+}

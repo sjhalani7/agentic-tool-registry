@@ -1,6 +1,6 @@
 {
   "channel": "experimental",
-  "version": "2026-03-08",
+  "version": "2026-03-17",
   "description": "Early-stage tool metadata that may be unstable, incomplete, or change rapidly, with no guarantee of safety, legality, accuracy, availability, or fitness.",
   "tools": []
 }

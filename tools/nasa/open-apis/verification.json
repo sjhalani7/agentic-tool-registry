@@ -1,0 +1,17 @@
+{
+  "tool_id": "nasa/open-apis",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://api.nasa.gov/",
+    "external_references": [
+      "https://api.nasa.gov/assets/html/authentication.html",
+      "https://github.com/nasa/api-docs",
+      "https://github.com/nasa/api-docs/blob/gh-pages/assets/json/apis.json",
+      "https://epic.gsfc.nasa.gov/about/api",
+      "https://api.nasa.gov/planetary/apod"
+    ],
+    "notes": "Manual review confirmed NASA first-party API portal ownership, DEMO_KEY/personal api_key guidance, and documented representative endpoint families (APOD, Mars Rover Photos, EPIC) in official NASA docs/catalog sources."
+  }
+}

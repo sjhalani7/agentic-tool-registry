@@ -1,0 +1,16 @@
+{
+  "tool_id": "arxiv/api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://info.arxiv.org/help/api/user-manual.html",
+    "external_references": [
+      "https://info.arxiv.org/help/api/index.html",
+      "https://info.arxiv.org/help/api/basics.html",
+      "https://info.arxiv.org/help/api/tou.html",
+      "https://export.arxiv.org/api/query?search_query=all:electron&start=0&max_results=1"
+    ],
+    "notes": "Manual review confirmed arXiv's official API user manual, unauthenticated query endpoint at export.arxiv.org/api/query, documented query parameters (search_query, id_list, start, max_results, sortBy, sortOrder), and API usage guidance in the Terms of Use."
+  }
+}

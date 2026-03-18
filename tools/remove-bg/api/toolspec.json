@@ -1,0 +1,85 @@
+{
+  "tool_id": "remove-bg/api",
+  "type": "http",
+  "summary": "remove.bg API provides background removal for images via HTTPS, supporting URL/file inputs, output tuning options, and account credit checks.",
+  "auth": {
+    "type": "api_key",
+    "instructions": "Create an API key in your remove.bg account dashboard and send it in the `X-Api-Key` header on each request. Keep keys secret and do not place them in URLs or client-side public code."
+  },
+  "external_docs": [
+    {
+      "description": "remove.bg API docs",
+      "url": "https://www.remove.bg/a/api-docs"
+    },
+    {
+      "description": "remove.bg API page and reference hub",
+      "url": "https://www.remove.bg/api"
+    },
+    {
+      "description": "remove.bg API changelog",
+      "url": "https://www.remove.bg/api#api-changelog"
+    }
+  ],
+  "http": {
+    "base_url": "https://api.remove.bg/v1.0",
+    "headers": [
+      {
+        "name": "X-Api-Key",
+        "value": "<REMOVE_BG_API_KEY>"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "remove-background-from-url",
+        "method": "POST",
+        "path": "/removebg",
+        "description": "Removes the background from an image specified by URL. Send multipart/form-data with `image_url` and optional output controls such as `size`, `format`, and background settings.",
+        "body": {
+          "encoding": "multipart/form-data",
+          "one_of_required": [
+            "image_url",
+            "image_file"
+          ],
+          "optional": [
+            "size",
+            "format",
+            "type",
+            "crop",
+            "bg_color",
+            "bg_image_url",
+            "channels",
+            "position",
+            "add_shadow"
+          ]
+        },
+        "example": {
+          "image_url": "https://example.com/photo.jpg",
+          "size": "auto",
+          "format": "png"
+        }
+      },
+      {
+        "name": "remove-background-from-file",
+        "method": "POST",
+        "path": "/removebg",
+        "description": "Removes the background from an uploaded image file. Send multipart/form-data with `image_file`; binary image output is returned by default.",
+        "body": {
+          "encoding": "multipart/form-data",
+          "required": [
+            "image_file"
+          ]
+        },
+        "example": {
+          "image_file": "<binary-image-file>",
+          "size": "auto"
+        }
+      },
+      {
+        "name": "get-account",
+        "method": "GET",
+        "path": "/account",
+        "description": "Returns account information such as remaining credits; documented on remove.bg API page/changelog as `GET /v1.0/account`."
+      }
+    ]
+  }
+}

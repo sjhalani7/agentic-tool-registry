@@ -1,0 +1,18 @@
+{
+  "tool_id": "weatherapi/weather-api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://www.weatherapi.com/docs/",
+    "external_references": [
+      "https://www.weatherapi.com/docs/#intro-authentication",
+      "https://www.weatherapi.com/docs/#intro-request",
+      "https://www.weatherapi.com/docs/#apis-realtime",
+      "https://www.weatherapi.com/docs/#apis-forecast",
+      "https://www.weatherapi.com/pricing.aspx",
+      "https://github.com/public-apis/public-apis"
+    ],
+    "notes": "Manual review verified WeatherAPI first-party documentation for API-key query authentication, base URL/method structure, and representative endpoint families; pricing/free-tier details were confirmed from WeatherAPI's official pricing page. Tool request provenance maps to public-apis/public-apis."
+  }
+}

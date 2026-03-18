@@ -1,0 +1,23 @@
+{
+  "id": "wikimedia/wikipedia-api",
+  "name": "Wikipedia REST API",
+  "publisher": {
+    "name": "Wikimedia Foundation",
+    "url": "https://www.mediawiki.org/wiki/API:REST_API",
+    "verified": true
+  },
+  "capabilities": [
+    "page-content",
+    "page-html",
+    "page-search",
+    "page-history",
+    "encyclopedia-data"
+  ],
+  "description": "MediaWiki REST API endpoints for reading Wikipedia page content, HTML renderings, search results, and revision metadata over HTTPS.",
+  "pricing": "Free for public Wikimedia content access; follow API usage and User-Agent policies: https://www.mediawiki.org/wiki/API:REST_API/Policies",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "tool_id": "balldontlie/api",
+  "type": "http",
+  "summary": "BALLDONTLIE NBA API for querying teams, players, games, stats, standings, leaders, and box scores over HTTPS with API-key auth.",
+  "auth": {
+    "type": "api_key",
+    "instructions": "Create an account at balldontlie.io and generate an API key from your dashboard. Send the key in the Authorization header on every request (Authorization: YOUR_API_KEY). The docs list Free, ALL-STAR, and GOAT tiers with different rate/credit limits and feature access."
+  },
+  "external_docs": [
+    {
+      "description": "BALLDONTLIE API docs",
+      "url": "https://docs.balldontlie.io/"
+    },
+    {
+      "description": "Legacy docs portal",
+      "url": "https://www.balldontlie.io/docs"
+    },
+    {
+      "description": "OpenAPI spec (NBA)",
+      "url": "https://www.balldontlie.io/openapi/nba.yml"
+    }
+  ],
+  "http": {
+    "base_url": "https://api.balldontlie.io/v1",
+    "headers": [
+      {
+        "name": "Authorization",
+        "value": "<BALLDONTLIE_API_KEY>"
+      },
+      {
+        "name": "Accept",
+        "value": "application/json"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "list-teams",
+        "method": "GET",
+        "path": "/teams",
+        "description": "Returns NBA teams; supports filters by conference and division.",
+        "query_params": [
+          "conference",
+          "division"
+        ],
+        "example": {
+          "conference": "East",
+          "division": "Atlantic"
+        }
+      },
+      {
+        "name": "list-players",
+        "method": "GET",
+        "path": "/players",
+        "description": "Returns players with cursor pagination and optional search/team filters.",
+        "query_params": [
+          "cursor",
+          "per_page",
+          "search",
+          "team_ids[]"
+        ],
+        "example": {
+          "search": "curry",
+          "per_page": "25"
+        }
+      },
+      {
+        "name": "list-games",
+        "method": "GET",
+        "path": "/games",
+        "description": "Returns games with season/date/team filters and pagination.",
+        "query_params": [
+          "cursor",
+          "per_page",
+          "seasons[]",
+          "dates[]",
+          "team_ids[]",
+          "start_date",
+          "end_date",
+          "postseason"
+        ],
+        "example": {
+          "seasons[]": "2024",
+          "team_ids[]": "14",
+          "dates[]": "2024-12-25"
+        }
+      },
+      {
+        "name": "list-stats",
+        "method": "GET",
+        "path": "/stats",
+        "description": "Returns player game stats with filters for players, games, seasons, and date ranges.",
+        "query_params": [
+          "cursor",
+          "per_page",
+          "player_ids[]",
+          "game_ids[]",
+          "seasons[]",
+          "start_date",
+          "end_date",
+          "postseason"
+        ],
+        "example": {
+          "player_ids[]": "237",
+          "seasons[]": "2024"
+        }
+      },
+      {
+        "name": "get-standings",
+        "method": "GET",
+        "path": "/standings",
+        "description": "Returns conference standings for a season (requires ALL-STAR or GOAT tier per docs).",
+        "query_params": [
+          "season"
+        ],
+        "example": {
+          "season": "2024"
+        }
+      },
+      {
+        "name": "get-leaders",
+        "method": "GET",
+        "path": "/leaders",
+        "description": "Returns stat leaders for a season and stat category (requires ALL-STAR or GOAT tier per docs).",
+        "query_params": [
+          "season",
+          "stat_type"
+        ],
+        "example": {
+          "season": "2024",
+          "stat_type": "pts"
+        }
+      },
+      {
+        "name": "get-box-scores",
+        "method": "GET",
+        "path": "/box_scores",
+        "description": "Returns game box scores for a date (docs mark this as GOAT-tier access).",
+        "query_params": [
+          "date"
+        ],
+        "example": {
+          "date": "2024-12-25"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "tool_id": "google/books-api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://developers.google.com/books/docs/overview",
+    "external_references": [
+      "https://developers.google.com/books",
+      "https://developers.google.com/books/docs/v1/using",
+      "https://developers.google.com/books/docs/v1/reference",
+      "https://developers.google.com/books/docs/v1/reference/volumes/list",
+      "https://developers.google.com/books/docs/v1/reference/mylibrary/bookshelves/addVolume"
+    ],
+    "notes": "Manual review verified first-party Google Books documentation, base URI (https://www.googleapis.com/books/v1), API key requirement for requests without OAuth tokens, OAuth scope requirements for My Library writes, and quota/reporting wording in official usage guidance."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "weatherapi/weather-api",
+  "name": "WeatherAPI",
+  "publisher": {
+    "name": "WeatherAPI.com",
+    "url": "https://www.weatherapi.com/",
+    "verified": true
+  },
+  "capabilities": [
+    "current-weather",
+    "forecast",
+    "history",
+    "alerts",
+    "search",
+    "astronomy"
+  ],
+  "description": "WeatherAPI HTTP service for current conditions, forecasts, historical weather, alerts, astronomy, and location search with JSON/XML responses.",
+  "pricing": "Free plan is $0/month with 100K calls/month; paid plans (Starter, Pro+, Business) increase quotas/features. Official pricing: https://www.weatherapi.com/pricing.aspx",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

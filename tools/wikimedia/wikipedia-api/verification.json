@@ -1,0 +1,17 @@
+{
+  "tool_id": "wikimedia/wikipedia-api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://www.mediawiki.org/wiki/API:REST_API",
+    "external_references": [
+      "https://www.mediawiki.org/wiki/API:REST_API/Get_started",
+      "https://www.mediawiki.org/wiki/API:REST_API/Reference",
+      "https://www.mediawiki.org/wiki/API:REST_API/Policies",
+      "https://www.mediawiki.org/wiki/OAuth/For_Developers",
+      "https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_User-Agent_Policy"
+    ],
+    "notes": "Manual review confirmed first-party Wikimedia documentation for REST base URL structure (/w/rest.php/v1), public read access patterns, representative Wikipedia content endpoints, and required descriptive User-Agent policy guidance."
+  }
+}

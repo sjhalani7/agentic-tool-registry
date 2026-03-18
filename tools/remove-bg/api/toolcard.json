@@ -1,0 +1,23 @@
+{
+  "id": "remove-bg/api",
+  "name": "remove.bg API",
+  "publisher": {
+    "name": "remove.bg",
+    "url": "https://www.remove.bg/api",
+    "verified": true
+  },
+  "capabilities": [
+    "background-removal",
+    "image-processing",
+    "foreground-extraction",
+    "transparent-background",
+    "bulk-image-editing"
+  ],
+  "description": "remove.bg API removes image backgrounds from uploaded files or image URLs and returns cutouts with configurable size, format, and background options.",
+  "pricing": "remove.bg documents a free trial where the first 50 API calls are free with no credit card required; paid credits/pricing details are at https://www.remove.bg/api.",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

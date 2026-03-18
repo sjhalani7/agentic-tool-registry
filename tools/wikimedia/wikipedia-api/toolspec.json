@@ -1,0 +1,90 @@
+{
+  "tool_id": "wikimedia/wikipedia-api",
+  "type": "http",
+  "summary": "Wikipedia MediaWiki REST API for public content retrieval, including page lookup, rendered HTML, full-text search, and revision-history metadata.",
+  "auth": {
+    "type": "none",
+    "instructions": "Public read endpoints do not require an API key or OAuth token. Send a descriptive User-Agent (or Api-User-Agent) header per Wikimedia API policy. OAuth is only needed for user-authenticated actions outside this read-only content profile."
+  },
+  "external_docs": [
+    {
+      "description": "MediaWiki REST API overview",
+      "url": "https://www.mediawiki.org/wiki/API:REST_API"
+    },
+    {
+      "description": "REST API getting started",
+      "url": "https://www.mediawiki.org/wiki/API:REST_API/Get_started"
+    },
+    {
+      "description": "REST API reference",
+      "url": "https://www.mediawiki.org/wiki/API:REST_API/Reference"
+    },
+    {
+      "description": "REST API policies and limits",
+      "url": "https://www.mediawiki.org/wiki/API:REST_API/Policies"
+    }
+  ],
+  "http": {
+    "base_url": "https://en.wikipedia.org/w/rest.php/v1",
+    "headers": [
+      {
+        "name": "User-Agent",
+        "value": "YourAppName/1.0 (https://example.com/contact)"
+      },
+      {
+        "name": "Accept",
+        "value": "application/json"
+      }
+    ],
+    "endpoints": [
+      {
+        "name": "search-page-content",
+        "method": "GET",
+        "path": "/search/page",
+        "description": "Searches Wikipedia page content and returns ranked page matches.",
+        "query_params": [
+          "q",
+          "limit",
+          "offset"
+        ],
+        "example": {
+          "q": "Ada Lovelace",
+          "limit": "5"
+        }
+      },
+      {
+        "name": "search-page-title",
+        "method": "GET",
+        "path": "/search/title",
+        "description": "Searches page titles and returns matching Wikipedia titles.",
+        "query_params": [
+          "q",
+          "limit",
+          "offset"
+        ],
+        "example": {
+          "q": "Machine learning",
+          "limit": "5"
+        }
+      },
+      {
+        "name": "get-page-content",
+        "method": "GET",
+        "path": "/page/{title}",
+        "description": "Returns canonical page metadata and source content for a page title."
+      },
+      {
+        "name": "get-page-html",
+        "method": "GET",
+        "path": "/page/{title}/html",
+        "description": "Returns Parsoid-generated HTML for a Wikipedia page title."
+      },
+      {
+        "name": "get-page-history",
+        "method": "GET",
+        "path": "/page/{title}/history",
+        "description": "Returns revision-history metadata for a Wikipedia page title."
+      }
+    ]
+  }
+}

@@ -1,13 +1,22 @@
 {
   "channel": "stable",
-  "version": "2026-03-08",
+  "version": "2026-03-17",
   "description": "Manually reviewed tool metadata intended for default discovery, without any guarantee of safety, legality, accuracy, availability, or fitness.",
   "tools": [
+    "arxiv/api",
+    "balldontlie/api",
+    "google/books-api",
     "google/calendar-api",
+    "google/drive-api",
+    "nasa/open-apis",
     "notion/public-api",
+    "open-library/api",
     "polymarket/cli",
+    "remove-bg/api",
     "slack/web-api",
     "stripe/purl-payments",
-    "twilio/messaging-api"
+    "twilio/messaging-api",
+    "weatherapi/weather-api",
+    "wikimedia/wikipedia-api"
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "tool_id": "google/drive-api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://developers.google.com/workspace/drive/api/guides/about-sdk",
+    "external_references": [
+      "https://developers.google.com/workspace/drive",
+      "https://developers.google.com/workspace/drive/api/guides/api-specific-auth",
+      "https://developers.google.com/workspace/drive/api/guides/limits",
+      "https://developers.google.com/workspace/drive/api/reference/rest/v3",
+      "https://developers.google.com/workspace/drive/api/reference/rest/v3/files/list",
+      "https://developers.google.com/workspace/drive/api/reference/rest/v3/files/create",
+      "https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/create",
+      "https://github.com/public-apis/public-apis"
+    ],
+    "notes": "Manual review verified first-party Google Drive documentation for OAuth scope guidance, Drive v3 REST resource patterns, base API URL (https://www.googleapis.com/drive/v3), upload endpoint behavior under /upload/drive/v3/files, and published quota limits wording. Public APIs repository was checked as the intake source reference."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "arxiv/api",
+  "name": "arXiv API",
+  "publisher": {
+    "name": "arXiv",
+    "url": "https://info.arxiv.org/help/api/index.html",
+    "verified": true
+  },
+  "capabilities": [
+    "paper-search",
+    "metadata-retrieval",
+    "atom-feed",
+    "id-lookup",
+    "category-filter"
+  ],
+  "description": "arXiv API query interface for searching and retrieving paper metadata as Atom feeds with fielded queries, pagination, and sort controls.",
+  "pricing": "Publicly accessible API with no paid plan required; usage is subject to arXiv API Terms of Use: https://info.arxiv.org/help/api/tou.html",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

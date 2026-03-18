@@ -1,0 +1,24 @@
+{
+  "id": "balldontlie/api",
+  "name": "BALLDONTLIE NBA API",
+  "publisher": {
+    "name": "BALLDONTLIE",
+    "url": "https://www.balldontlie.io/docs",
+    "verified": true
+  },
+  "capabilities": [
+    "nba-teams",
+    "nba-players",
+    "nba-games",
+    "player-stats",
+    "standings",
+    "leaders"
+  ],
+  "description": "Official BALLDONTLIE NBA API for teams, players, games, stats, standings, leaders, and related basketball data via HTTPS endpoints.",
+  "pricing": "Docs list a Free tier (5 requests/min, $0/mo) plus paid ALL-STAR and GOAT tiers with higher limits and premium endpoints: https://docs.balldontlie.io/",
+  "currency": "USD",
+  "payment": {
+    "is_paid": false,
+    "purl_supported": false
+  }
+}

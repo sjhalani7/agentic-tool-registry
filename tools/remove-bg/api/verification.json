@@ -1,0 +1,17 @@
+{
+  "tool_id": "remove-bg/api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://www.remove.bg/a/api-docs",
+    "external_references": [
+      "https://www.remove.bg/api",
+      "https://www.remove.bg/a/api-docs#remove-background",
+      "https://www.remove.bg/a/api-docs#api-key",
+      "https://www.remove.bg/a/api-docs#free-trials",
+      "https://www.remove.bg/api#api-changelog"
+    ],
+    "notes": "Manual review verified remove.bg first-party API documentation, including X-Api-Key authentication guidance, API base URL usage via https://api.remove.bg/v1.0/removebg examples, free-trial wording, and changelog mention of GET /v1.0/account."
+  }
+}

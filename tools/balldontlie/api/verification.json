@@ -1,0 +1,15 @@
+{
+  "tool_id": "balldontlie/api",
+  "status": "verified",
+  "reviewed_by": "registry-moderator",
+  "reviewed_at": "2026-03-17T00:00:00Z",
+  "evidence": {
+    "official_docs_url": "https://docs.balldontlie.io/",
+    "external_references": [
+      "https://www.balldontlie.io/docs",
+      "https://www.balldontlie.io/openapi/nba.yml",
+      "https://github.com/public-apis/public-apis"
+    ],
+    "notes": "Manual review verified BALLDONTLIE first-party documentation for API-key Authorization header usage, NBA v1 base URL, endpoint coverage, and tiered access details; initial lead source was public-apis/public-apis."
+  }
+}
