@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import sys
+import tomllib
+from importlib.metadata import PackageNotFoundError, version as get_installed_version
 from pathlib import Path
 
 from src.commands.init_tool import run_init_tool
@@ -20,11 +22,31 @@ from src.commands.sync import (
 )
 
 
+def get_cli_version() -> str:
+    """Return the installed package version, with a source-tree fallback."""
+    try:
+        return get_installed_version("agentic-tool-registry")
+    except PackageNotFoundError:
+        pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"
+        with pyproject_path.open("rb") as handle:
+            payload = tomllib.load(handle)
+        version = payload.get("project", {}).get("version")
+        if isinstance(version, str) and version:
+            return version
+        return "unknown"
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Construct the CLI argument parser."""
     parser = argparse.ArgumentParser(
         prog="agentic-tool-registry",
         description="CLI for syncing remote/local registry bundles into cache.",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {get_cli_version()}",
+        help="Show the CLI version and exit.",
     )
     subparsers = parser.add_subparsers(dest="command")
 

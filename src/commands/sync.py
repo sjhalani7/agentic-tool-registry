@@ -21,6 +21,11 @@ DEFAULT_CACHE_DIR = Path.home() / ".cache" / "agentic-tool-registry"
 DEFAULT_REMOTE_BASE_URL = "https://sjhalani7.github.io/agentic-tool-registry"
 SUPPORTED_CHANNELS = {"stable", "community", "experimental"}
 SUPPORTED_SOURCE_MODES = {"remote", "local"}
+REQUIRED_BUNDLE_ARTIFACTS = {
+    "toolcards.bundle.jsonl",
+    "toolspecs.bundle.jsonl",
+    "verifications.bundle.jsonl",
+}
 SAFE_PATH_COMPONENT_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,255}$")
 
 
@@ -250,6 +255,17 @@ def verify_bundle(bundle_dir: Path, expected_channel: str) -> tuple[dict[str, An
                 f"(expected {expected_sha}, got {actual_sha})"
             )
         required_files.append(safe_artifact_name)
+
+    artifact_names = set(required_files)
+    if artifact_names != REQUIRED_BUNDLE_ARTIFACTS:
+        missing = sorted(REQUIRED_BUNDLE_ARTIFACTS - artifact_names)
+        extra = sorted(artifact_names - REQUIRED_BUNDLE_ARTIFACTS)
+        details: list[str] = []
+        if missing:
+            details.append(f"missing required artifacts: {', '.join(missing)}")
+        if extra:
+            details.append(f"unexpected artifacts: {', '.join(extra)}")
+        raise SystemExit(f"sync failed: invalid bundle artifact set ({'; '.join(details)})")
 
     required_files.append("manifest.json")
     return manifest, required_files
